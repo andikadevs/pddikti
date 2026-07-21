@@ -118,12 +118,23 @@ curl -s https://<host>/mcp -X POST \
 
 ## Upstream config
 
-This API proxies the official public PDDikti backend. Set in `.env`:
+This API proxies the official PDDikti backend, which lives at `.../api` on the main domain
+and is guarded by **Cloudflare bot management**. Set in `.env`:
 
 ```
-UPSTREAM_BASE_URL=https://api-pddikti.kemdiktisaintek.go.id
-UPSTREAM_HEADERS={"X-User-IP":"1.1.1.1","Origin":"https://pddikti.kemdiktisaintek.go.id","Referer":"https://pddikti.kemdiktisaintek.go.id/"}
+UPSTREAM_BASE_URL=https://pddikti.kemdiktisaintek.go.id/api
+UPSTREAM_HEADERS={"Cookie":"cf_clearance=<token>","User-Agent":"<exact UA the token was issued to>"}
 ```
+
+Only two headers are required: a valid `cf_clearance` cookie and the **exact** `User-Agent`
+it was issued to (a mismatched/absent UA → `403`). Grab both from a browser session — open
+`https://pddikti.kemdiktisaintek.go.id/`, DevTools → **Network** → any `/api/*` request →
+**Copy as cURL** → lift the `cf_clearance` cookie and the `user-agent`. The cookie expires
+(refresh it when `/api/*` starts returning `503`); for an unattended deployment, front the
+egress with a Cloudflare-clearance solver (e.g. FlareSolverr).
+
+The upstream wraps payloads as `{status,data}` and returns opaque base64url ids (with `=`
+padding, sent raw in the path) — both handled in `lib/upstream.ts` / `lib/encoding.ts`.
 
 Without `UPSTREAM_BASE_URL`, `/api/*` returns a clean `503` envelope (no data).
 
