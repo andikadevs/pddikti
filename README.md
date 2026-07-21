@@ -119,19 +119,23 @@ curl -s https://<host>/mcp -X POST \
 ## Upstream config
 
 This API proxies the official PDDikti backend, which lives at `.../api` on the main domain
-and is guarded by **Cloudflare bot management**. Set in `.env`:
+and is guarded by **Cloudflare bot management**. Only the base URL goes in `.env`:
 
 ```
 UPSTREAM_BASE_URL=https://pddikti.kemdiktisaintek.go.id/api
-UPSTREAM_HEADERS={"Cookie":"cf_clearance=<token>","User-Agent":"<exact UA the token was issued to>"}
+UPSTREAM_HEADERS={}   # empty baseline — credentials come from /config or the solver
 ```
 
-Only two headers are required: a valid `cf_clearance` cookie and the **exact** `User-Agent`
-it was issued to (a mismatched/absent UA → `403`). Grab both from a browser session — open
-`https://pddikti.kemdiktisaintek.go.id/`, DevTools → **Network** → any `/api/*` request →
-**Copy as cURL** → lift the `cf_clearance` cookie and the `user-agent`. The cookie expires
-(refresh it when `/api/*` starts returning `503`); for an unattended deployment, front the
-egress with a Cloudflare-clearance solver (e.g. FlareSolverr).
+Cloudflare needs a `cf_clearance` cookie + the **exact** `User-Agent` it was issued to (a
+mismatched/absent UA → `403`). You provide these **at runtime**, not in `.env`, two ways:
+
+- **Manually via the `/config` page** — set `CONFIG_PASSWORD`, open `/config`, paste the
+  `cf_clearance` + User-Agent (or a full DevTools **Copy as cURL**, auto-parsed). Saved to
+  `CONFIG_STORE_PATH`, applied live, persists across restarts. Refresh when it expires.
+- **Automatically via the solver** — see *Auto-solver* below; a `403` self-heals with no
+  manual step.
+
+`UPSTREAM_HEADERS` in `.env` is only an optional fallback, overridden by the runtime config.
 
 The upstream wraps payloads as `{status,data}` and returns opaque base64url ids (with `=`
 padding, sent raw in the path) — both handled in `lib/upstream.ts` / `lib/encoding.ts`.
