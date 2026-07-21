@@ -46,8 +46,10 @@ src/
   schemas/common.ts shared Zod params + response/error envelopes
   routes/           one file per group; each exports an OpenAPIHono sub-app
   web/seo.ts        robots.txt + sitemap.xml
-  web/client-bundle.ts  Bun.build (JS) + Tailwind CLI (CSS) for the SPA, cached
-  web/client/       React SPA (index.html, styles.css, index.tsx, App.tsx, components/, lib/)
+  web/client-bundle.ts  single Bun.build (JS + Tailwind CSS via bun-plugin-tailwind), cached
+  web/client/       React SPA — index.html, index.tsx (createRoot+StrictMode), App.tsx,
+                    components/ (UI + views), hooks/ (use-endpoint, use-selected-pt,
+                    use-debounced-value), lib/ (constants, format, theme), styles.css
 tests/              *.test.ts (bun:test)
 ```
 
@@ -56,9 +58,15 @@ tests/              *.test.ts (bun:test)
 - Root serves a **React SPA** (a generic PT profile explorer: search → pick → profile,
   selection carried in the URL hash `#/pt/<id>`), all native, no Vite:
   `GET /` returns the HTML shell, `GET /app.js` the **`Bun.build`** browser bundle, and
-  `GET /app.css` the **Tailwind v4** stylesheet compiled via the `@tailwindcss/cli`
-  (`web/client-bundle.ts`). Both are cached and rebuilt per request when `DEBUG`. Do not add
-  `Bun.serve`, Vite, or a `dist/` build step.
+  `GET /app.css` the **Tailwind v4** stylesheet — both produced by a **single `Bun.build`**
+  with **`bun-plugin-tailwind`** (the `index.tsx` entry imports `styles.css`; no separate
+  Tailwind CLI process), in `web/client-bundle.ts`. Both are cached and rebuilt per request
+  when `DEBUG`. Do not add `Bun.serve`, Vite, or a `dist/` build step.
+- Organize the client: **`components/`** (UI primitives in `ui.tsx`, plus view components),
+  **`hooks/`** (React hooks — `use-endpoint`, `use-selected-pt`, `use-debounced-value`;
+  kebab-case, one hook concern per file), **`lib/`** (pure non-React utils — `constants`,
+  `format` the shared `text`/`year`/`num` helpers, `theme`). Don't re-inline shared helpers
+  into components.
 - Styling is **Tailwind v4, CSS-first** (`styles.css`: `@import "tailwindcss"`, palette in
   `@theme`, `@source "./**/*.tsx"`). The design is **flat** — radius tokens are `0` and no
   `rounded-*` utilities are used. Keep it that way.

@@ -31,8 +31,10 @@ Open http://localhost:3000
 - `GET /` — flat React **PT profile explorer**: search a university, pick one, and see its
   profile, stats, cost, study duration, study programs, **all lecturers**, **student
   search**, facilities, and name history. The selected university is carried in the URL hash
-  (`#/pt/<id>`). Bundled natively with `Bun.build` (JS) + Tailwind v4 CLI (CSS), no Vite.
-  Requires a configured upstream (below) to show live data.
+  (`#/pt/<id>`). Bundled natively by a single `Bun.build` (JS + Tailwind v4 CSS via
+  `bun-plugin-tailwind`), no Vite. Client code is organized into `components/` (UI + views),
+  `hooks/` (`use-endpoint`, `use-selected-pt`, `use-debounced-value`), and `lib/`
+  (`constants`, `format`, `theme`). Requires a configured upstream (below) to show live data.
 
 ## Docs
 
