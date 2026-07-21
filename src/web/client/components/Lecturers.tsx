@@ -1,12 +1,8 @@
 import { lecturersPath } from '../constants.ts'
-import { useEndpoint } from '../lib/api.ts'
+import { text } from '../lib/format.ts'
+import { useEndpoint } from '../hooks/use-endpoint.ts'
 import { Async, Pill, Section, Table, Td, Th } from './ui.tsx'
 import type { LecturersResponse } from '../types.ts'
-
-function text(value: string | null | undefined, fallback = '—'): string {
-  const v = (value ?? '').toString().trim()
-  return v === '' ? fallback : v
-}
 
 /** Full lecturer list, aggregated server-side across active study programs. */
 export function Lecturers({ id }: { id: string }) {

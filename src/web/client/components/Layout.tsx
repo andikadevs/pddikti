@@ -1,4 +1,4 @@
-import { clearSelectedPt } from '../lib/selected-pt.ts'
+import { clearSelectedPt } from '../hooks/use-selected-pt.ts'
 
 /** Shared page width used by the header, profile, and footer. */
 export const CONTAINER = 'mx-auto max-w-[1080px] px-5'

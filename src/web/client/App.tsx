@@ -1,6 +1,7 @@
 import { logoUrl, prodiPath, ptPath } from './constants.ts'
-import { useEndpoint } from './lib/api.ts'
-import { clearSelectedPt, useSelectedPt } from './lib/selected-pt.ts'
+import { nf, text, year } from './lib/format.ts'
+import { useEndpoint } from './hooks/use-endpoint.ts'
+import { clearSelectedPt, useSelectedPt } from './hooks/use-selected-pt.ts'
 import { accreditationTone } from './theme.ts'
 import { CONTAINER, Header } from './components/Layout.tsx'
 import { Async, Badge, Chip, InfoRow, Pill, Section, StatCard, Table, Td, Th } from './components/ui.tsx'
@@ -8,19 +9,6 @@ import { Lecturers } from './components/Lecturers.tsx'
 import { Students } from './components/Students.tsx'
 import { PtSearch } from './components/PtSearch.tsx'
 import type { Prodi, PtCost, PtDetail, PtMahasiswa, PtNameHistory, PtRasio, PtStudyDuration } from './types.ts'
-
-const nf = new Intl.NumberFormat('id-ID')
-
-function text(value: string | null | undefined, fallback = '—'): string {
-  const v = (value ?? '').toString().trim()
-  return v === '' ? fallback : v
-}
-
-function year(value: string | null | undefined): string {
-  if (!value) return '—'
-  const match = /^(\d{4})/.exec(value)
-  return match?.[1] ?? value
-}
 
 export function App() {
   const id = useSelectedPt()

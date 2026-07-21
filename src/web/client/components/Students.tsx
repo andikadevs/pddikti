@@ -1,17 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { searchMhsPath } from '../constants.ts'
-import { useEndpoint } from '../lib/api.ts'
+import { text } from '../lib/format.ts'
+import { useDebouncedValue } from '../hooks/use-debounced-value.ts'
+import { useEndpoint } from '../hooks/use-endpoint.ts'
 import { Async, Section, Table, Td, Th } from './ui.tsx'
 import type { StudentHit } from '../types.ts'
 
 /** Minimum keyword length before an auto-search fires (avoids slow broad queries). */
 const MIN_QUERY_LEN = 3
 const DEBOUNCE_MS = 400
-
-function text(value: string | null | undefined, fallback = '—'): string {
-  const v = (value ?? '').toString().trim()
-  return v === '' ? fallback : v
-}
 
 const norm = (v: string | null | undefined): string => (v ?? '').toLowerCase().trim()
 
@@ -36,10 +33,16 @@ function matchesPt(s: StudentHit, ptName?: string, ptSingkat?: string): boolean 
  * The query is debounced and gated to {@link MIN_QUERY_LEN} characters so typing
  * does not fire a request per keystroke (broad 1–2 char terms can be slow upstream).
  */
-export function Students({ ptName, ptSingkat }: { ptName?: string; ptSingkat?: string }) {
+interface StudentsProps {
+  ptName?: string
+  ptSingkat?: string
+}
+
+export function Students({ ptName, ptSingkat }: StudentsProps) {
   const [input, setInput] = useState('')
-  const [query, setQuery] = useState<string | null>(null)
   const [samePtOnly, setSamePtOnly] = useState(false)
+  const debounced = useDebouncedValue(input.trim(), DEBOUNCE_MS)
+  const query = debounced.length >= MIN_QUERY_LEN ? debounced : null
   const state = useEndpoint<StudentHit[]>(query ? searchMhsPath(query) : null)
 
   const canFilter = norm(ptName) !== '' || norm(ptSingkat) !== ''
@@ -48,23 +51,9 @@ export function Students({ ptName, ptSingkat }: { ptName?: string; ptSingkat?: s
   const narrow = (v: StudentHit[]) =>
     filterOn ? v.filter((s) => matchesPt(s, ptName, ptSingkat)) : v
 
-  // Debounced auto-search: fire once typing settles and the term is long enough.
-  useEffect(() => {
-    const q = input.trim()
-    const id = setTimeout(() => setQuery(q.length >= MIN_QUERY_LEN ? q : null), DEBOUNCE_MS)
-    return () => clearTimeout(id)
-  }, [input])
-
   return (
     <Section title="Mahasiswa (Pencarian)">
-      <form
-        className="mb-3 flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault()
-          const q = input.trim()
-          setQuery(q === '' ? null : q)
-        }}
-      >
+      <form className="mb-3 flex gap-2" onSubmit={(e) => e.preventDefault()}>
         <input
           className="flex-1 border border-line bg-surface px-3 py-2 text-sm outline-none focus:border-secondary"
           placeholder="Cari nama atau NIM mahasiswa… (min 3 huruf)"

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import type { EndpointState } from '../lib/api.ts'
+import type { EndpointState } from '../hooks/use-endpoint.ts'
 
 /**
  * A titled content block with an accent marker. Flat card body. Collapsible:
