@@ -14,7 +14,7 @@ auto-generated OpenAPI docs.
 
 ```sh
 bun install
-cp .env.example .env   # fill UPSTREAM_BASE_URL and UPSTREAM_HEADERS
+cp .env.example .env   # set UPSTREAM_BASE_URL; supply Cloudflare creds at runtime (see below)
 ```
 
 ## Run
@@ -78,13 +78,17 @@ Or commit a project-scoped `.mcp.json` (already included — fill the env):
       "command": "bun",
       "args": ["run", "./src/mcp/stdio.ts"],
       "env": {
-        "UPSTREAM_BASE_URL": "https://api-pddikti.kemdiktisaintek.go.id",
-        "UPSTREAM_HEADERS": "{\"X-User-IP\":\"1.1.1.1\",\"Origin\":\"https://pddikti.kemdiktisaintek.go.id\",\"Referer\":\"https://pddikti.kemdiktisaintek.go.id/\"}"
+        "UPSTREAM_BASE_URL": "https://pddikti.kemdiktisaintek.go.id/api",
+        "CONFIG_STORE_PATH": "/abs/path/to/pddikti/runtime-config.json"
       }
     }
   }
 }
 ```
+
+Pointing `CONFIG_STORE_PATH` at the same `runtime-config.json` the `/config` page writes lets
+the stdio server reuse that Cloudflare clearance (or set `SOLVER_ENABLED`/`SOLVER_URL` to
+auto-resolve). See *Upstream config* below.
 
 Remote (HTTP) against a deployed instance:
 
@@ -123,7 +127,6 @@ and is guarded by **Cloudflare bot management**. Only the base URL goes in `.env
 
 ```
 UPSTREAM_BASE_URL=https://pddikti.kemdiktisaintek.go.id/api
-UPSTREAM_HEADERS={}   # empty baseline — credentials come from /config or the solver
 ```
 
 Cloudflare needs a `cf_clearance` cookie + the **exact** `User-Agent` it was issued to (a
@@ -135,7 +138,8 @@ mismatched/absent UA → `403`). You provide these **at runtime**, not in `.env`
 - **Automatically via the solver** — see *Auto-solver* below; a `403` self-heals with no
   manual step.
 
-`UPSTREAM_HEADERS` in `.env` is only an optional fallback, overridden by the runtime config.
+(An optional `UPSTREAM_HEADERS` JSON env map is still accepted as a fallback baseline, but is
+overridden by the runtime config and normally left unset.)
 
 The upstream wraps payloads as `{status,data}` and returns opaque base64url ids (with `=`
 padding, sent raw in the path) — both handled in `lib/upstream.ts` / `lib/encoding.ts`.
@@ -174,3 +178,25 @@ The browser lives inside FlareSolverr, so this works on a headless server (no di
 ## Project conventions
 
 See [CLAUDE.md](./CLAUDE.md).
+
+## License
+
+[AGPL-3.0-or-later](./LICENSE) — free to use, study, modify, and share; network deployments must offer their source.
+
+## Disclaimer
+
+**For educational and learning purposes only.** This is a personal, non-commercial study
+project.
+
+- **Not affiliated** with or endorsed by PDDikti, Kemdiktisaintek, or Cloudflare. All upstream
+  data is © PDDikti; names belong to their respective owners.
+- **Provided "as is"**, with no warranty of accuracy, availability, or fitness (see the AGPL-3.0
+  terms).
+- **No liability for misuse.** The authors accept no responsibility for how this software is
+  used or for any damages arising from it — you use it entirely at your own risk.
+- **Your responsibility.** You must comply with all applicable laws and the terms of service of
+  any system it touches (including the upstream's terms and its anti-bot/rate-limit
+  protections). Do not use it to overload, disrupt, mass-scrape, or abuse any service, or to
+  handle personal data unlawfully.
+
+See [LICENSE](./LICENSE) for the full text.
