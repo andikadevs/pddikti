@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pddikti": {
+      "command": "bun",
+      "args": ["run", "./src/mcp/stdio.ts"]
+    }
+  }
+}

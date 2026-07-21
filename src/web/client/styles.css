@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@source "./**/*.tsx";
+
+@theme {
+  /* navy + gold brand palette */
+  --color-primary: #0b2a5b;
+  --color-secondary: #1e4d8c;
+  --color-accent: #f5a623;
+  --color-bg: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-ink: #1a2433;
+  --color-muted: #5b6b82;
+  --color-line: #e3e9f2;
+
+  /* Flat: kill every corner radius */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+}
+
+/* Page defaults */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}

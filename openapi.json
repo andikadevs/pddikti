@@ -1,0 +1,6405 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PDDikti API",
+    "version": "1.0.0",
+    "description": "Structured proxy API for Indonesia higher-education data (PDDikti): universities, study programs, lecturers, students, and statistics."
+  },
+  "servers": [
+    {
+      "url": "https://pddikti.ptbdee.com/api"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "OverviewResponse": {
+        "nullable": true
+      },
+      "ProxyResponse": {
+        "nullable": true,
+        "description": "Upstream JSON payload with an injected `credit` field."
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "overview"
+        ],
+        "operationId": "apiOverview",
+        "summary": "API overview",
+        "description": "Service metadata, documentation links, and availability status.",
+        "responses": {
+          "200": {
+            "description": "Service metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/all/{keyword}/": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "operationId": "searchAll",
+        "summary": "Search all entities",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search keyword used to match PDDikti entities.",
+              "example": "informatika"
+            },
+            "required": true,
+            "name": "keyword",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/pt/{keyword}/": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "operationId": "searchPt",
+        "summary": "Search universities",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search keyword used to match PDDikti entities.",
+              "example": "informatika"
+            },
+            "required": true,
+            "name": "keyword",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/prodi/{keyword}/": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "operationId": "searchProdi",
+        "summary": "Search study programs",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search keyword used to match PDDikti entities.",
+              "example": "informatika"
+            },
+            "required": true,
+            "name": "keyword",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/dosen/{keyword}/": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "operationId": "searchDosen",
+        "summary": "Search lecturers",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search keyword used to match PDDikti entities.",
+              "example": "informatika"
+            },
+            "required": true,
+            "name": "keyword",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/mhs/{keyword}/": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "operationId": "searchMhs",
+        "summary": "Search students",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search keyword used to match PDDikti entities.",
+              "example": "informatika"
+            },
+            "required": true,
+            "name": "keyword",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/detail/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptDetail",
+        "summary": "Get university detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/rasio/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptRatio",
+        "summary": "Get lecturer-student ratio by university",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/mahasiswa/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptStudents",
+        "summary": "Get university student metrics",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/waktu-studi/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptStudyDuration",
+        "summary": "Get average study duration by university",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/riwayat/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptNameHistory",
+        "summary": "Get university name history",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/biaya-kuliah/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptCostRange",
+        "summary": "Get tuition range by university",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/fasilitas/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptFacilities",
+        "summary": "Get university facilities metadata",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/prodi/{id_pt}/{id_thsmt}": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptProdiBySemester",
+        "summary": "Get university study programs by semester",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Semester code for period-based queries.",
+              "example": "20241"
+            },
+            "required": true,
+            "name": "id_thsmt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/logo/{id_pt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptLogo",
+        "summary": "Get university logo",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "University logo image bytes.",
+            "content": {
+              "image/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pt/lecturers/{id_pt}/{id_thsmt}/": {
+      "get": {
+        "tags": [
+          "pt"
+        ],
+        "operationId": "ptLecturers",
+        "summary": "List all lecturers (aggregated across active study programs)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "University (PT) identifier.",
+              "example": "PT-id"
+            },
+            "required": true,
+            "name": "id_pt",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Semester code for period-based queries.",
+              "example": "20241"
+            },
+            "required": true,
+            "name": "id_thsmt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/detail/{id_prodi}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiDetail",
+        "summary": "Get study program detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/desc/{id_prodi}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiDesc",
+        "summary": "Get study program description",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/num-students-lecturers/{id_prodi}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiCounts",
+        "summary": "Get student and lecturer counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/riwayat/{id_prodi}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiNameHistory",
+        "summary": "Get study program name history",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/biaya-kuliah/{id_prodi}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiCostRange",
+        "summary": "Get study program tuition range",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/dosen-homebase/{id_prodi}/{id_thsmt}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiDosenHomebase",
+        "summary": "Get homebase lecturers by semester",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Semester code for period-based queries.",
+              "example": "20241"
+            },
+            "required": true,
+            "name": "id_thsmt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi/dosen-penghitung-ratio/{id_prodi}/{id_thsmt}/": {
+      "get": {
+        "tags": [
+          "prodi"
+        ],
+        "operationId": "prodiDosenRatio",
+        "summary": "Get lecturers used for ratio calculations",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Study program (Prodi) identifier.",
+              "example": "PRODI-id"
+            },
+            "required": true,
+            "name": "id_prodi",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Semester code for period-based queries.",
+              "example": "20241"
+            },
+            "required": true,
+            "name": "id_thsmt",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/profile/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenProfile",
+        "summary": "Get lecturer profile",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/study-history/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenStudyHistory",
+        "summary": "Get lecturer education history",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/teaching-history/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenTeachingHistory",
+        "summary": "Get lecturer teaching history",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/penelitian/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenResearch",
+        "summary": "Get lecturer research portfolio",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/pengabdian/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenService",
+        "summary": "Get lecturer service portfolio",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/karya/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenWorks",
+        "summary": "Get lecturer works portfolio",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dosen/paten/{id_dosen}/": {
+      "get": {
+        "tags": [
+          "dosen"
+        ],
+        "operationId": "dosenPatents",
+        "summary": "Get lecturer patents portfolio",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lecturer (Dosen) identifier.",
+              "example": "DOSEN-id"
+            },
+            "required": true,
+            "name": "id_dosen",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mhs/detail/{id_mhs}/": {
+      "get": {
+        "tags": [
+          "mahasiswa"
+        ],
+        "operationId": "mhsDetail",
+        "summary": "Get student detail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Student (Mahasiswa) identifier.",
+              "example": "MHS-id"
+            },
+            "required": true,
+            "name": "id_mhs",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCount",
+        "summary": "Get total student count",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count-active/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCountActive",
+        "summary": "Get active student count",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count-gender/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCountByGender",
+        "summary": "Get student count by gender",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count-bidang-ilmu/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCountByField",
+        "summary": "Get student count by field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count-status/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCountByStatus",
+        "summary": "Get student count by status",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count-jenjang/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCountByDegree",
+        "summary": "Get student count by degree level",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/mhs-count-kelompok-lembaga/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "mhsCountByInstitutionGroup",
+        "summary": "Get student count by institution group",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCount",
+        "summary": "Get total lecturer count",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count-active/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCountActive",
+        "summary": "Get active lecturer count",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count-gender/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCountByGender",
+        "summary": "Get lecturer count by gender",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count-bidang/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCountByField",
+        "summary": "Get lecturer count by field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count-keaktifan/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCountByActivity",
+        "summary": "Get lecturer count by activity",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count-jenjang/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCountByDegree",
+        "summary": "Get lecturer count by degree",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/dosen-count-ikatan/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "dosenCountByAffiliation",
+        "summary": "Get lecturer count by affiliation",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/pt-count/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "ptCount",
+        "summary": "Get total university count",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/pt-count-province/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "ptCountByProvince",
+        "summary": "Get university count by province",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/pt-count-kelompok-pembina/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "ptCountBySupervisor",
+        "summary": "Get university count by supervising group",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/pt-count-akreditasi/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "ptCountByAccreditation",
+        "summary": "Get university count by accreditation",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/pt-count-bentuk-pt/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "ptCountByType",
+        "summary": "Get university count by institution type",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/prodi-count/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "prodiCount",
+        "summary": "Get total study program count",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/prodi-count-bidang-ilmu-terbanyak/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "prodiCountTopField",
+        "summary": "Get most common study program field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/prodi-count-kelompok-pembina/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "prodiCountBySupervisor",
+        "summary": "Get study program count by supervising group",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/prodi-count-bidang-ilmu/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "prodiCountByField",
+        "summary": "Get study program count by field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/prodi-count-akreditasi/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "prodiCountByAccreditation",
+        "summary": "Get study program count by accreditation",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stats/prodi-count-jenjang/": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "operationId": "prodiCountByDegree",
+        "summary": "Get study program count by degree level",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/agama/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldAgama",
+        "summary": "Get study programs in religion field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/ekonomi/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldEkonomi",
+        "summary": "Get study programs in economics field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/humaniora/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldHumaniora",
+        "summary": "Get study programs in humanities field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/kesehatan/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldKesehatan",
+        "summary": "Get study programs in health field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/mipa/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldMIPA",
+        "summary": "Get study programs in science field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/pendidikan/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldPendidikan",
+        "summary": "Get study programs in education field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/pertanian/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldPertanian",
+        "summary": "Get study programs in agriculture field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/seni/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldSeni",
+        "summary": "Get study programs in arts field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/sosial/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldSosial",
+        "summary": "Get study programs in social field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prodi-bidang-ilmu/teknik/": {
+      "get": {
+        "tags": [
+          "prodi-bidang-ilmu"
+        ],
+        "operationId": "prodiFieldTeknik",
+        "summary": "Get study programs in engineering field",
+        "responses": {
+          "200": {
+            "description": "Upstream data (shape varies by endpoint).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Upstream timed out (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected proxy error (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid upstream response (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream unavailable (error envelope).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
