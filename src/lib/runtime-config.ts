@@ -48,7 +48,12 @@ export function loadRuntimeConfig(): RuntimeConfig {
     return cached
   }
   try {
-    const parsed = runtimeConfigSchema.safeParse(JSON.parse(readFileSync(path, 'utf8')))
+    const raw = readFileSync(path, 'utf8').trim()
+    if (raw === '') {
+      cached = {}
+      return cached
+    }
+    const parsed = runtimeConfigSchema.safeParse(JSON.parse(raw))
     cached = parsed.success ? parsed.data : {}
   } catch (err) {
     if (loadConfig().DEBUG) console.error('runtime-config: failed to read store:', err)
