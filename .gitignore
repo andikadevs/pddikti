@@ -6,6 +6,9 @@ node_modules/
 .env.*
 !.env.example
 
+# local Claude Code settings (personal, per-machine)
+.claude/settings.local.json
+
 # build / runtime
 dist/
 *.log
