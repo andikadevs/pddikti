@@ -41,6 +41,7 @@ function TopBar() {
         <nav className="flex gap-4 text-sm text-[#cdd9ee]">
           <a className="hover:text-white" href="/api/docs">API Docs</a>
           <a className="hover:text-white" href="/api/">Overview</a>
+          <a className="hover:text-white" href="/config">Konfigurasi</a>
         </nav>
       </div>
     </div>
