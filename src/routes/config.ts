@@ -40,16 +40,6 @@ function isAuthed(c: Context<AppEnv>): boolean {
   return cookie !== undefined && verifySession(cookie, password, nowS())
 }
 
-/** Reject cross-origin POSTs (defense-in-depth atop sameSite=Lax). */
-function sameOrigin(c: Context<AppEnv>): boolean {
-  const base = loadConfig().PUBLIC_BASE_URL
-  const origin = c.req.header('origin')
-  if (origin !== undefined) return origin === base
-  const referer = c.req.header('referer')
-  if (referer !== undefined) return referer.startsWith(`${base}/`)
-  return true // no Origin/Referer (e.g. tests / curl) — allowed
-}
-
 /** Extract the `cf_clearance` value from a full `Cookie` header string, if present. */
 function cfClearanceOf(cookieHeader: string | undefined): string {
   if (!cookieHeader) return ''
@@ -183,7 +173,6 @@ config.get('/', (c) => {
 config.post('/login', async (c) => {
   const password = loadConfig().CONFIG_PASSWORD
   if (password === '') return c.notFound()
-  if (!sameOrigin(c)) return c.text('Forbidden', 403)
   const body = await c.req.parseBody()
   const supplied = typeof body['password'] === 'string' ? body['password'] : ''
   if (!constantTimeEqual(supplied, password)) {
@@ -209,7 +198,6 @@ config.post('/logout', (c) => {
 config.post('/', async (c) => {
   if (loadConfig().CONFIG_PASSWORD === '') return c.notFound()
   if (!isAuthed(c)) return c.html(loginPage(), 401)
-  if (!sameOrigin(c)) return c.text('Forbidden', 403)
 
   const body = await c.req.parseBody()
   const str = (k: string): string => (typeof body[k] === 'string' ? (body[k] as string).trim() : '')
@@ -251,7 +239,6 @@ config.post('/', async (c) => {
 config.post('/test', async (c) => {
   if (loadConfig().CONFIG_PASSWORD === '') return c.notFound()
   if (!isAuthed(c)) return c.html(loginPage(), 401)
-  if (!sameOrigin(c)) return c.text('Forbidden', 403)
 
   const result = await getUpstream().get('beranda', { content_limit: '1' })
   const code =
