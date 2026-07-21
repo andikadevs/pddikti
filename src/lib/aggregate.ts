@@ -12,7 +12,9 @@ import type { RequestIdentity } from '../types.ts'
  * the HTTP route and the MCP tool can finalize them identically.
  */
 
-const LECTURERS_CONCURRENCY = 6
+// Fan out per-prodi dosen lookups widely — most universities have well under this many
+// active study programs, so the whole aggregation resolves in a single concurrent wave.
+const LECTURERS_CONCURRENCY = 16
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
