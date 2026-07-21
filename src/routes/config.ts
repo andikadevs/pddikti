@@ -67,7 +67,12 @@ function parseCurl(curl: string): { cfClearance?: string; userAgent?: string } {
 
 const PAGE_CSS = `
   *{box-sizing:border-box}body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#F7F9FC;color:#1A2433}
-  .bar{background:#0B2A5B;color:#fff;padding:14px 20px;font-weight:700;letter-spacing:.03em}
+  .bar{background:#0B2A5B;color:#fff;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between}
+  .bar .brand{color:#fff;font-weight:700;letter-spacing:.03em;text-decoration:none}
+  .bar .brand .dot{color:#F5A623}
+  .bar nav{display:flex;gap:16px;font-size:13px}
+  .bar nav a{color:#cdd9ee;text-decoration:none}
+  .bar nav a:hover{color:#fff}
   .wrap{max-width:720px;margin:28px auto;padding:0 20px}
   .card{background:#fff;border:1px solid #e3e9f2;padding:24px}
   h1{font-size:20px;margin:0 0 4px}.sub{color:#5b6b82;font-size:13px;margin:0 0 20px}
@@ -91,7 +96,10 @@ function shell(title: string, body: string): string {
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="robots" content="noindex, nofollow"/>
 <title>${escapeHtml(title)}</title><style>${PAGE_CSS}</style></head>
-<body><div class="bar">PDDikti · Konfigurasi</div><div class="wrap"><div class="card">${body}</div></div></body></html>`
+<body><div class="bar">
+<a class="brand" href="/">PDDikti <span class="dot">·</span> Konfigurasi</a>
+<nav><a href="/">Beranda</a><a href="/api/docs">API Docs</a><a href="/api/">Overview</a></nav>
+</div><div class="wrap"><div class="card">${body}</div></div></body></html>`
 }
 
 function loginPage(error?: string): string {
