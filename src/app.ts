@@ -13,6 +13,7 @@ import { seoHeaders } from './middleware/headers.ts'
 import { requestIdentity } from './middleware/request-identity.ts'
 import { signSession } from './lib/session.ts'
 import mcpHttp from './mcp/http.ts'
+import configPage from './routes/config.ts'
 import dosen from './routes/dosen.ts'
 import mahasiswa from './routes/mahasiswa.ts'
 import overview from './routes/overview.ts'
@@ -134,6 +135,8 @@ export function buildApp(): OpenAPIHono<AppEnv> {
   app.route('/api/', overview)
   // Stateless MCP (Streamable HTTP) for AI agents; self-gated by X-API-Key.
   app.route('/mcp', mcpHttp)
+  // Operator config page; self-gated by CONFIG_PASSWORD (disabled when empty).
+  app.route('/config', configPage)
   app.route('/', seo)
 
   return app

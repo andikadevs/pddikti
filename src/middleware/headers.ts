@@ -14,7 +14,8 @@ export function creditHeaderValue(creditLine: string): string {
  */
 export const seoHeaders = createMiddleware<AppEnv>(async (c, next) => {
   await next()
-  c.header('X-Robots-Tag', 'index, follow')
+  // The operator config page must never be indexed; everything else is discoverable.
+  c.header('X-Robots-Tag', c.req.path.startsWith('/config') ? 'noindex, nofollow' : 'index, follow')
   if (c.req.path.startsWith('/api')) {
     const config = loadConfig()
     c.header('X-Project-Credit', creditHeaderValue(config.CREDIT_LINE))

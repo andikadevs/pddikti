@@ -1,8 +1,14 @@
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { buildApp } from '../src/app.ts'
 import { resetConfig } from '../src/config.ts'
 import { setUpstream } from '../src/lib/client.ts'
+import { resetRuntimeConfig } from '../src/lib/runtime-config.ts'
 import { UpstreamClient } from '../src/lib/upstream.ts'
 import type { FetchLike } from '../src/types.ts'
+
+/** Per-run scratchpad path for the runtime-config store (never the real file). */
+export const TEST_STORE_PATH = join(tmpdir(), 'pddikti-test-runtime-config.json')
 
 const BASE_ENV: Record<string, string> = {
   PORT: '3000',
@@ -16,14 +22,19 @@ const BASE_ENV: Record<string, string> = {
   CREDIT_LINE: 'Data © PDDikti',
   SUPPORT_EMAIL: 'support@test',
   SUPPORT_URL: 'https://support.test',
+  CONFIG_PASSWORD: '',
+  CONFIG_STORE_PATH: TEST_STORE_PATH,
+  // Neutralize any ambient .env Bun auto-loads, so tests stay hermetic.
+  REDIS_URL: '',
 }
 
-/** Apply base env plus overrides, resetting the config cache. */
+/** Apply base env plus overrides, resetting the config + runtime-config caches. */
 export function applyEnv(overrides: Record<string, string> = {}): void {
   for (const [key, value] of Object.entries({ ...BASE_ENV, ...overrides })) {
     process.env[key] = value
   }
   resetConfig()
+  resetRuntimeConfig()
 }
 
 /** Build the app with a stubbed upstream fetch returning the given response. */
