@@ -40,11 +40,6 @@ export interface PtCost {
   range_biaya_kuliah?: string
 }
 
-export interface PtFacility {
-  id_blob?: string
-  file_name?: string
-}
-
 export interface PtNameHistory {
   nama?: string
   tahun?: string | number

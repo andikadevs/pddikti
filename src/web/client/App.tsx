@@ -2,23 +2,14 @@ import { logoUrl, prodiPath, ptPath } from './constants.ts'
 import { useEndpoint } from './lib/api.ts'
 import { clearSelectedPt, useSelectedPt } from './lib/selected-pt.ts'
 import { accreditationTone } from './theme.ts'
+import { CONTAINER, Header } from './components/Layout.tsx'
 import { Async, Badge, Chip, InfoRow, Pill, Section, StatCard, Table, Td, Th } from './components/ui.tsx'
 import { Lecturers } from './components/Lecturers.tsx'
 import { Students } from './components/Students.tsx'
 import { PtSearch } from './components/PtSearch.tsx'
-import type {
-  Prodi,
-  PtCost,
-  PtDetail,
-  PtFacility,
-  PtMahasiswa,
-  PtNameHistory,
-  PtRasio,
-  PtStudyDuration,
-} from './types.ts'
+import type { Prodi, PtCost, PtDetail, PtMahasiswa, PtNameHistory, PtRasio, PtStudyDuration } from './types.ts'
 
 const nf = new Intl.NumberFormat('id-ID')
-const CONTAINER = 'mx-auto max-w-[1080px] px-5'
 
 function text(value: string | null | undefined, fallback = '—'): string {
   const v = (value ?? '').toString().trim()
@@ -31,29 +22,12 @@ function year(value: string | null | undefined): string {
   return match?.[1] ?? value
 }
 
-function TopBar() {
-  return (
-    <div className="bg-primary text-white">
-      <div className={`${CONTAINER} flex h-14 items-center justify-between`}>
-        <div className="font-bold tracking-wide">
-          PDDikti <span className="text-accent">·</span> Profil PT
-        </div>
-        <nav className="flex gap-4 text-sm text-[#cdd9ee]">
-          <a className="hover:text-white" href="/api/docs">API Docs</a>
-          <a className="hover:text-white" href="/api/">Overview</a>
-          <a className="hover:text-white" href="/config">Konfigurasi</a>
-        </nav>
-      </div>
-    </div>
-  )
-}
-
 export function App() {
   const id = useSelectedPt()
   if (id === null) {
     return (
       <>
-        <TopBar />
+        <Header />
         <main className="pb-16">
           <div className={`${CONTAINER} pt-8`}>
             <PtSearch />
@@ -72,7 +46,6 @@ function Profile({ id }: { id: string }) {
   const studyDuration = useEndpoint<PtStudyDuration[]>(ptPath(id, 'waktu-studi'))
   const cost = useEndpoint<PtCost>(ptPath(id, 'biaya-kuliah'))
   const history = useEndpoint<PtNameHistory[] | null>(ptPath(id, 'riwayat'))
-  const facilities = useEndpoint<PtFacility[]>(ptPath(id, 'fasilitas'))
   const prodi = useEndpoint<Prodi[]>(prodiPath(id))
 
   const d = detail.data
@@ -85,7 +58,7 @@ function Profile({ id }: { id: string }) {
 
   return (
     <>
-      <TopBar />
+      <Header />
 
       <header className="bg-gradient-to-br from-primary to-secondary pb-16 pt-9 text-white">
         <div className={`${CONTAINER}`}>
