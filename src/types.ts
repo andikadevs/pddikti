@@ -43,4 +43,10 @@ export interface UpstreamOptions {
   cache?: Cache
   /** TTL (seconds) applied to cached responses. */
   cacheTtlS?: number
+  /**
+   * Called once when a request gets HTTP 403 (e.g. a Cloudflare challenge). Should
+   * refresh credentials and return the fresh header map to retry with, or null to
+   * give up. Retried at most once per request.
+   */
+  refreshOnForbidden?: () => Promise<Record<string, string> | null>
 }

@@ -52,6 +52,7 @@ export class UpstreamClient {
   private readonly fetchImpl: FetchLike
   private readonly cache: Cache
   private readonly cacheTtlS: number
+  private readonly refreshOnForbidden?: () => Promise<Record<string, string> | null>
 
   constructor(options: UpstreamOptions) {
     this.baseUrl = options.baseUrl.replace(/\/+$/, '')
@@ -60,6 +61,7 @@ export class UpstreamClient {
     this.fetchImpl = options.fetchImpl ?? fetch
     this.cache = options.cache ?? new NoopCache()
     this.cacheTtlS = options.cacheTtlS ?? 0
+    this.refreshOnForbidden = options.refreshOnForbidden
   }
 
   /** GET an endpoint with optional query params; returns parsed JSON. */
@@ -118,10 +120,13 @@ export class UpstreamClient {
     return `${this.baseUrl}/${endpoint.replace(/^\/+/, '')}`
   }
 
-  private buildHeaders(identity: RequestIdentity): Record<string, string> {
+  private buildHeaders(
+    identity: RequestIdentity,
+    base: Record<string, string> = this.headers,
+  ): Record<string, string> {
     // A configured User-Agent (any case) wins — some upstreams bind anti-bot
     // clearance cookies to a fixed UA, so randomizing it would break auth.
-    const headers: Record<string, string> = { ...this.headers }
+    const headers: Record<string, string> = { ...base }
     if (!Object.keys(headers).some((k) => k.toLowerCase() === 'user-agent')) {
       headers['User-Agent'] = randomUserAgent()
     }
@@ -149,8 +154,6 @@ export class UpstreamClient {
       )
     }
 
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), this.timeoutMs)
     try {
       const target = new URL(url)
       if (params) {
@@ -166,11 +169,14 @@ export class UpstreamClient {
         if (hit !== undefined) return hit
       }
 
-      const response = await this.fetchImpl(target, {
-        method: 'GET',
-        headers: this.buildHeaders(identity),
-        signal: controller.signal,
-      })
+      let response = await this.fetchWithTimeout(target, this.buildHeaders(identity))
+      // A 403 usually means a stale/absent anti-bot cookie. Refresh once and retry.
+      if (response.status === 403 && this.refreshOnForbidden) {
+        const fresh = await this.refreshOnForbidden()
+        if (fresh) {
+          response = await this.fetchWithTimeout(target, this.buildHeaders(identity, fresh))
+        }
+      }
       const result = await this.handleResponse(response, asImage)
 
       // Only successful payloads are cached (error envelopes carry code >= 400).
@@ -199,6 +205,18 @@ export class UpstreamClient {
         'Unexpected error',
         'An unexpected error occurred. Please try again later.',
       )
+    }
+  }
+
+  /** One GET attempt with its own abort timeout (so a slow refresh cannot pre-abort it). */
+  private async fetchWithTimeout(
+    target: URL,
+    headers: Record<string, string>,
+  ): Promise<Response> {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), this.timeoutMs)
+    try {
+      return await this.fetchImpl(target, { method: 'GET', headers, signal: controller.signal })
     } finally {
       clearTimeout(timer)
     }

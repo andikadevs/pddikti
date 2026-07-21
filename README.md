@@ -138,6 +138,23 @@ padding, sent raw in the path) — both handled in `lib/upstream.ts` / `lib/enco
 
 Without `UPSTREAM_BASE_URL`, `/api/*` returns a clean `503` envelope (no data).
 
+### Auto-solver (optional, hands-off clearance)
+
+`cf_clearance` expires, so instead of refreshing it by hand you can let the app do it —
+server-deployable via **FlareSolverr** (a headless-browser challenge solver that runs in its
+own container). Set `SOLVER_ENABLED=true` + `SOLVER_URL` (the FlareSolverr `/v1` endpoint).
+On a `403`, the proxy calls FlareSolverr to clear the challenge, saves the fresh
+`cf_clearance` + User-Agent (to `CONFIG_STORE_PATH`), and retries the request once. Left off,
+refresh manually via `/config`.
+
+Run both with the provided `docker-compose.yml`:
+
+```sh
+docker compose up -d   # starts the API + a flaresolverr sidecar
+```
+
+The browser lives inside FlareSolverr, so this works on a headless server (no display).
+
 ## Scripts
 
 | Script | Purpose |

@@ -1,0 +1,30 @@
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      # Auto-solve the Cloudflare challenge via the flaresolverr sidecar below.
+      SOLVER_ENABLED: "true"
+      SOLVER_URL: "http://flaresolverr:8191/v1"
+      # Runtime config (saved cf_clearance) persists on a named volume across restarts.
+      CONFIG_STORE_PATH: "/data/runtime-config.json"
+    volumes:
+      - config-data:/data
+    depends_on:
+      - flaresolverr
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    environment:
+      LOG_LEVEL: info
+    # Not published to the host — only the api service needs it (internal network).
+    expose:
+      - "8191"
+    restart: unless-stopped
+
+volumes:
+  config-data:

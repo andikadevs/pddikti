@@ -69,6 +69,13 @@ const envSchema = z.object({
   CONFIG_PASSWORD: z.string().default(''),
   CONFIG_STORE_PATH: z.string().default('./runtime-config.json'),
 
+  // Auto-solver: when enabled, a 403 (Cloudflare challenge) calls a FlareSolverr sidecar
+  // (SOLVER_URL) to harvest a fresh cf_clearance + User-Agent, saved and the request retried.
+  SOLVER_ENABLED: booleanFromEnv.default('false'),
+  SOLVER_URL: z.string().default(''),
+  SOLVER_TARGET_URL: z.string().default(''),
+  SOLVER_TIMEOUT_MS: z.coerce.number().int().positive().default(60000),
+
   // Redis cache (optional). When disabled, the cache layer is a no-op passthrough.
   CACHE_ENABLED: booleanFromEnv.default('false'),
   CACHE_TTL_S: z.coerce.number().int().positive().default(600),
