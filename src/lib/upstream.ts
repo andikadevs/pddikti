@@ -7,6 +7,26 @@ import type { FetchLike, ImageResult, RequestIdentity, UpstreamOptions } from '.
 
 const EMPTY_IDENTITY: RequestIdentity = { clientIp: null, userAgent: null }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/**
+ * The upstream wraps every payload in a `{ status, data }` envelope
+ * (`{status:"success", data:...}` on success, `{status:"error", message:...}` on
+ * failure). Unwrap it here — the single egress point — so the rest of the proxy,
+ * the SPA, and the MCP tools keep seeing the bare payload they were built for.
+ */
+function unwrapEnvelope(json: unknown, httpStatus: number): unknown {
+  if (!isRecord(json)) return json
+  if (json['status'] === 'error') {
+    const code = httpStatus >= 400 ? httpStatus : 400
+    return errorBody(code, 'HTTP error occurred', json['message'] ?? json)
+  }
+  if (json['status'] === 'success' && 'data' in json) return json['data']
+  return json
+}
+
 const CONNECTION_ERROR_PATTERN =
   /unable to connect|fetch failed|network|ECONNREFUSED|ECONNRESET|ENOTFOUND|EAI_AGAIN|connect/i
 
@@ -99,7 +119,12 @@ export class UpstreamClient {
   }
 
   private buildHeaders(identity: RequestIdentity): Record<string, string> {
-    const headers: Record<string, string> = { ...this.headers, 'User-Agent': randomUserAgent() }
+    // A configured User-Agent (any case) wins — some upstreams bind anti-bot
+    // clearance cookies to a fixed UA, so randomizing it would break auth.
+    const headers: Record<string, string> = { ...this.headers }
+    if (!Object.keys(headers).some((k) => k.toLowerCase() === 'user-agent')) {
+      headers['User-Agent'] = randomUserAgent()
+    }
     if (identity.clientIp) {
       headers['X-Forwarded-For'] = identity.clientIp
       headers['X-Real-IP'] = identity.clientIp
@@ -187,7 +212,7 @@ export class UpstreamClient {
         return { kind: 'image', bytes: await response.arrayBuffer(), contentType } satisfies ImageResult
       }
       try {
-        return await response.json()
+        return unwrapEnvelope(await response.json(), response.status)
       } catch {
         return errorBody(502, 'Invalid JSON response', 'The upstream returned malformed JSON.')
       }
@@ -199,6 +224,8 @@ export class UpstreamClient {
     } catch {
       message = await response.text()
     }
+    // Upstream errors arrive as `{status:"error", message:"..."}` — surface the inner message.
+    if (isRecord(message) && 'message' in message) message = message['message']
     return errorBody(response.status, 'HTTP error occurred', message)
   }
 }
