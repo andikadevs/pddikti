@@ -28,8 +28,8 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Docker setup
 
-Run as **two containers** — the API + a **FlareSolverr** sidecar for hands-off Cloudflare
-clearance — via the provided `docker-compose.yml`:
+Run as **three containers** — the API + a **FlareSolverr** sidecar (hands-off Cloudflare
+clearance) + **Redis** (response cache) — via the provided `docker-compose.yml`:
 
 ```sh
 docker compose up -d          # build + start api (:3000) + flaresolverr
@@ -44,9 +44,12 @@ What it wires:
   `SOLVER_URL=http://flaresolverr:8191/v1`, and `CONFIG_STORE_PATH=/data/runtime-config.json`.
 - **`flaresolverr`** — `ghcr.io/flaresolverr/flaresolverr`, **internal only** (not published to
   the host); its headless browser solves the Cloudflare challenge on a `403`.
-- **`config-data`** volume — persists the solved `cf_clearance` across restarts.
+- **`redis`** — `redis:7-alpine` (password + AOF persistence), internal only; the API's cache.
+- **`config-data`** / **`redis-data`** volumes — persist the solved `cf_clearance` and the
+  cache across restarts.
 
-Only the API port is exposed; FlareSolverr stays on the internal network. For a public-facing
+Only the API is reached (via the reverse proxy); FlareSolverr + Redis stay internal. For a
+public-facing
 setup put a TLS-terminating reverse proxy in front, and set `PUBLIC_BASE_URL`, `API_KEY`,
 and `CONFIG_PASSWORD` accordingly.
 

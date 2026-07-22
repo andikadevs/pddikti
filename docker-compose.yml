@@ -1,30 +1,47 @@
 services:
   api:
     build: .
-    ports:
-      - "3000:3000"
+    # No host port publish — the platform's reverse proxy routes the domain to :3000.
+    expose:
+      - "3000"
     env_file:
       - .env
     environment:
-      # Auto-solve the Cloudflare challenge via the flaresolverr sidecar below.
+      # Reach the sidecars by their compose service names.
       SOLVER_ENABLED: "true"
       SOLVER_URL: "http://flaresolverr:8191/v1"
-      # Runtime config (saved cf_clearance) persists on a named volume across restarts.
       CONFIG_STORE_PATH: "/data/runtime-config.json"
+      CACHE_ENABLED: "true"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      REDIS_USERNAME: "default"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REDIS_URL: ""
     volumes:
+      # Persist the solved cf_clearance across restarts.
       - config-data:/data
     depends_on:
       - flaresolverr
+      - redis
     restart: unless-stopped
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     environment:
       LOG_LEVEL: info
-    # Not published to the host — only the api service needs it (internal network).
     expose:
       - "8191"
     restart: unless-stopped
 
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    expose:
+      - "6379"
+    restart: unless-stopped
+
 volumes:
   config-data:
+  redis-data:
