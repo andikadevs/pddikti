@@ -21,10 +21,63 @@ cp .env.example .env   # set UPSTREAM_BASE_URL; supply Cloudflare creds at runti
 
 ```sh
 bun run dev     # hot reload
-bun run start   # production
+bun run start   # start server
 ```
 
-Open http://localhost:3000
+Open [http://localhost:3000](http://localhost:3000).
+
+## Docker setup
+
+Run as **two containers** — the API + a **FlareSolverr** sidecar for hands-off Cloudflare
+clearance — via the provided `docker-compose.yml`:
+
+```sh
+docker compose up -d          # build + start api (:3000) + flaresolverr
+docker compose logs -f api    # follow API logs
+docker compose down           # stop
+```
+
+What it wires:
+
+- **`api`** — built from the multi-stage `Dockerfile` (`oven/bun:1.3-alpine`, frozen-lockfile
+  deps-only install). Reads `.env`; compose also sets `SOLVER_ENABLED=true`,
+  `SOLVER_URL=http://flaresolverr:8191/v1`, and `CONFIG_STORE_PATH=/data/runtime-config.json`.
+- **`flaresolverr`** — `ghcr.io/flaresolverr/flaresolverr`, **internal only** (not published to
+  the host); its headless browser solves the Cloudflare challenge on a `403`.
+- **`config-data`** volume — persists the solved `cf_clearance` across restarts.
+
+Only the API port is exposed; FlareSolverr stays on the internal network. For a public-facing
+setup put a TLS-terminating reverse proxy in front, and set `PUBLIC_BASE_URL`, `API_KEY`,
+and `CONFIG_PASSWORD` accordingly.
+
+Single image, no solver (refresh clearance manually via `/#/config`):
+
+```sh
+docker build -t pddikti .
+docker run -p 3000:3000 --env-file .env pddikti
+```
+
+## Configuration
+
+All config is read once from the environment via `src/config.ts` (the only place that touches
+`process.env`). Bun auto-loads `.env`. Key variables:
+
+| Variable                            | Default                   | Purpose                                                              |
+| ----------------------------------- | ------------------------- | -------------------------------------------------------------------- |
+| `PORT`                            | `3000`                  | Listen port                                                          |
+| `PUBLIC_BASE_URL`                 | `http://localhost:3000` | Absolute base for docs links +`secure` cookies                     |
+| `UPSTREAM_BASE_URL`               | —                        | PDDikti API base (`https://pddikti.kemdiktisaintek.go.id/api`)     |
+| `UPSTREAM_TIMEOUT_MS`             | `15000`                 | Per-request upstream timeout                                         |
+| `API_KEY`                         | `` (off)                  | Gate`/api/*` (`X-API-Key` or SPA session cookie); empty = public |
+| `SESSION_TTL_S`                   | `86400`                 | Session/config cookie lifetime                                       |
+| `CONFIG_PASSWORD`                 | `` (off)                  | Enables the`/#/config` page; empty = disabled (404)                |
+| `CONFIG_STORE_PATH`               | `./runtime-config.json` | Where runtime overrides + solved cookie persist                      |
+| `SOLVER_ENABLED`                  | `false`                 | Auto-solve Cloudflare on`403` via FlareSolverr                     |
+| `SOLVER_URL`                      | —                        | FlareSolverr`/v1` endpoint                                         |
+| `CACHE_ENABLED` / `CACHE_TTL_S` | `false` / `600`       | Optional Redis response cache                                        |
+| `CREDIT_LINE`                     | `Data © PDDikti`       | Attribution injected into every JSON response                        |
+
+See `.env.example` for the full list.
 
 ## Web UI
 
@@ -94,7 +147,7 @@ Pointing `CONFIG_STORE_PATH` at the same `runtime-config.json` the config page w
 the stdio server reuse that Cloudflare clearance (or set `SOLVER_ENABLED`/`SOLVER_URL` to
 auto-resolve). See *Upstream config* below.
 
-Remote (HTTP) against a deployed instance:
+Remote (HTTP) against a running instance:
 
 ```sh
 claude mcp add --transport http pddikti https://<host>/mcp
@@ -129,7 +182,7 @@ curl -s https://<host>/mcp -X POST \
 This API proxies the official PDDikti backend, which lives at `.../api` on the main domain
 and is guarded by **Cloudflare bot management**. Only the base URL goes in `.env`:
 
-```
+```dotenv
 UPSTREAM_BASE_URL=https://pddikti.kemdiktisaintek.go.id/api
 ```
 
@@ -168,17 +221,34 @@ docker compose up -d   # starts the API + a flaresolverr sidecar
 
 The browser lives inside FlareSolverr, so this works on a headless server (no display).
 
+## Architecture
+
+- **Bun + Hono** (`OpenAPIHono`), exported as `export default { fetch, port }` — no
+  `Bun.serve`, Vite, or Express.
+- **Single egress**: every upstream call goes through `lib/upstream.ts` (auth headers,
+  timeout, `{status,data}` unwrap, error mapping, `403` auto-refresh), with an optional Redis
+  cache (`lib/cache.ts`). Routes never `fetch` directly.
+- **Zod-first**: one schema drives both request validation and OpenAPI generation; strict
+  TypeScript, no `any` (upstream payloads are opaque `z.unknown()`).
+- **Two frontends, one core**: the REST `/api/*` routes and the in-process MCP server (`/mcp`)
+  both call `lib/` directly — identical egress, cache, and credit envelope, no second hop.
+- **Native React SPA**: bundled by a single `Bun.build` (+ Tailwind v4 CSS-first), served by
+  Hono; `components/` + `hooks/` + `lib/` layout, one shared sticky `Header`.
+- **Definition of done**: `bun run typecheck` (clean) + `bun test` (green), no network in tests.
+
+Full conventions live in [CLAUDE.md](./CLAUDE.md).
+
 ## Scripts
 
-| Script | Purpose |
-|---|---|
-| `bun run dev` | Hot-reloading dev server |
-| `bun run start` | Run server |
-| `bun run mcp` | Run the MCP server over stdio |
-| `bun run mcp:dev` | MCP server (stdio) with hot reload |
+| Script                  | Purpose                                       |
+| ----------------------- | --------------------------------------------- |
+| `bun run dev`         | Hot-reloading dev server                      |
+| `bun run start`       | Run server                                    |
+| `bun run mcp`         | Run the MCP server over stdio                 |
+| `bun run mcp:dev`     | MCP server (stdio) with hot reload            |
 | `bun run mcp:inspect` | Launch MCP Inspector against the stdio server |
-| `bun test` | Run tests |
-| `bun run typecheck` | `tsc --noEmit` |
+| `bun test`            | Run tests                                     |
+| `bun run typecheck`   | `tsc --noEmit`                              |
 
 ## Project conventions
 
