@@ -11,7 +11,7 @@ export const CONTAINER = 'mx-auto max-w-[1080px] px-5'
  */
 export function Header() {
   return (
-    <div className="bg-primary text-white">
+    <div className="sticky top-0 z-50 bg-primary text-white">
       <div className={`${CONTAINER} flex h-14 items-center justify-between`}>
         <button
           type="button"
