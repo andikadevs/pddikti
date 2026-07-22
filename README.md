@@ -88,7 +88,7 @@ Or commit a project-scoped `.mcp.json` (already included — fill the env):
 }
 ```
 
-Pointing `CONFIG_STORE_PATH` at the same `runtime-config.json` the `/config` page writes lets
+Pointing `CONFIG_STORE_PATH` at the same `runtime-config.json` the config page writes lets
 the stdio server reuse that Cloudflare clearance (or set `SOLVER_ENABLED`/`SOLVER_URL` to
 auto-resolve). See *Upstream config* below.
 
@@ -134,7 +134,8 @@ UPSTREAM_BASE_URL=https://pddikti.kemdiktisaintek.go.id/api
 Cloudflare needs a `cf_clearance` cookie + the **exact** `User-Agent` it was issued to (a
 mismatched/absent UA → `403`). You provide these **at runtime**, not in `.env`, two ways:
 
-- **Manually via the `/config` page** — set `CONFIG_PASSWORD`, open `/config`, paste the
+- **Manually via the config page** — set `CONFIG_PASSWORD`, open the **Konfigurasi** view
+  (`/#/config`, a React page backed by the `/config/*` JSON API), paste the
   `cf_clearance` + User-Agent (or a full DevTools **Copy as cURL**, auto-parsed). Saved to
   `CONFIG_STORE_PATH`, applied live, persists across restarts. Refresh when it expires.
 - **Automatically via the solver** — see *Auto-solver* below; a `403` self-heals with no
@@ -155,7 +156,7 @@ server-deployable via **FlareSolverr** (a headless-browser challenge solver that
 own container). Set `SOLVER_ENABLED=true` + `SOLVER_URL` (the FlareSolverr `/v1` endpoint).
 On a `403`, the proxy calls FlareSolverr to clear the challenge, saves the fresh
 `cf_clearance` + User-Agent (to `CONFIG_STORE_PATH`), and retries the request once. Left off,
-refresh manually via `/config`.
+refresh manually via the `/#/config` page.
 
 Run both with the provided `docker-compose.yml`:
 
