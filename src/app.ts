@@ -13,6 +13,7 @@ import { seoHeaders } from './middleware/headers.ts'
 import { requestIdentity } from './middleware/request-identity.ts'
 import { signSession } from './lib/session.ts'
 import mcpHttp from './mcp/http.ts'
+import { getToolCatalog } from './mcp/catalog.ts'
 import configApi from './routes/config.ts'
 import dosen from './routes/dosen.ts'
 import mahasiswa from './routes/mahasiswa.ts'
@@ -133,6 +134,8 @@ export function buildApp(): OpenAPIHono<AppEnv> {
   // Hono mounts a sub-app's "/" route at "/api" (no trailing slash); also serve
   // the documented "/api/" overview URL by mounting the overview module there.
   app.route('/api/', overview)
+  // MCP tool catalog (JSON) — the MCP analogue of /api/openapi.json; backs the docs view.
+  app.get('/mcp/tools', async (c) => c.json(await getToolCatalog()))
   // Stateless MCP (Streamable HTTP) for AI agents; self-gated by X-API-Key.
   app.route('/mcp', mcpHttp)
   // JSON config API (password-gated); the UI is a React view at /#/config.

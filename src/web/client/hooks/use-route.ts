@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 
 /** The SPA's current view, derived from the URL hash. */
-export type Route = { name: 'config' } | { name: 'profile'; id: string } | { name: 'landing' }
+export type Route =
+  | { name: 'config' }
+  | { name: 'mcp' }
+  | { name: 'profile'; id: string }
+  | { name: 'landing' }
 
 const PT_PREFIX = '#/pt/'
 
 function readRoute(): Route {
   const h = typeof location === 'undefined' ? '' : location.hash
   if (h === '#/config') return { name: 'config' }
+  if (h === '#/mcp') return { name: 'mcp' }
   if (h.startsWith(PT_PREFIX)) {
     const raw = h.slice(PT_PREFIX.length)
     if (raw !== '') {

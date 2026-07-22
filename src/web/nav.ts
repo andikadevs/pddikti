@@ -15,7 +15,8 @@ export interface NavLink {
 export const NAV_LINKS: readonly NavLink[] = [
   { href: '/', label: 'Beranda' },
   { href: '/api/docs', label: 'API Docs' },
+  // Absolute hashes so they load the SPA then route to the view from any page.
+  { href: '/#/mcp', label: 'MCP Docs' },
   { href: '/api/', label: 'Overview' },
-  // Absolute so it loads the SPA then routes to the config view from any page.
   { href: '/#/config', label: 'Konfigurasi' },
 ]

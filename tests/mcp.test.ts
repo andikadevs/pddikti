@@ -61,6 +61,16 @@ describe('mcp tools', () => {
     )
   })
 
+  test('GET /mcp/tools exposes the tool catalog as JSON', async () => {
+    const app = appWithUpstream(jsonFetch({}))
+    const res = await app.request('/mcp/tools')
+    expect(res.status).toBe(200)
+    const tools = (await res.json()) as Array<{ name: string; inputSchema?: unknown }>
+    expect(tools.map((t) => t.name)).toContain('search_pddikti')
+    expect(tools.length).toBeGreaterThan(5)
+    expect(tools[0]).toHaveProperty('inputSchema')
+  })
+
   test('search_pddikti hits the right upstream and injects credit', async () => {
     applyEnv()
     const rec = recordingFetch([{ nama: 'Institut Teknologi Bandung' }])
