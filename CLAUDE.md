@@ -102,6 +102,10 @@ mapping, and `withCredit` envelope as the REST routes. No second HTTP hop.
   via `Mcp-Session-Id` (in-process map; single replica or sticky sessions). **Always public**
   (no `X-API-Key` gate) regardless of `API_KEY`, so browser connectors like claude.ai — which
   can't send a static header — can reach it; only the `/api/*` REST surface stays key-gated.
+- `mcp/catalog.ts` — `getToolCatalog()`: lists the tools over an in-memory transport (no
+  network), cached. Served as JSON at **`GET /mcp/tools`** (the MCP analogue of
+  `/api/openapi.json`) and rendered by the SPA's **MCP Docs** view (`/#/mcp`). Never hand-list
+  tools for docs — this is derived from the live server.
 
 Cross-prodi aggregations with no single upstream (e.g. all university lecturers) live in
 `lib/aggregate.ts` and are shared by both the HTTP route and the MCP tool.

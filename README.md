@@ -42,6 +42,8 @@ Open http://localhost:3000
 - Swagger UI: `/api/docs`
 - ReDoc: `/api/redoc`
 - OpenAPI spec: `/api/openapi.json` (live)
+- MCP tools: `/#/mcp` (readable view) · `/mcp/tools` (JSON catalog — the MCP analogue of
+  the OpenAPI spec)
 - Static spec: [`openapi.json`](./openapi.json) in the repo, for offline agent
   reference. Regenerate after route changes with `bun run openapi:export`
   (set `PUBLIC_BASE_URL` to stamp the `servers` URL, e.g.
