@@ -1,11 +1,13 @@
+import { BRAND, NAV_LINKS } from '../../nav.ts'
 import { clearSelectedPt } from '../hooks/use-selected-pt.ts'
 
 /** Shared page width used by the header, profile, and footer. */
 export const CONTAINER = 'mx-auto max-w-[1080px] px-5'
 
 /**
- * Top navigation bar, rendered on every SPA view so the nav is always present. The
- * brand returns to the search landing; the links reach the API docs and config page.
+ * Top navigation bar, rendered on every SPA view so the nav is always present. Brand +
+ * links come from the shared `web/nav.ts` spec so the server-rendered config page shows
+ * an identical header. The brand returns to the search landing.
  */
 export function Header() {
   return (
@@ -16,12 +18,14 @@ export function Header() {
           onClick={() => clearSelectedPt()}
           className="font-bold tracking-wide hover:opacity-90"
         >
-          PDDikti <span className="text-accent">·</span> Profil PT
+          {BRAND}
         </button>
         <nav className="flex gap-4 text-sm text-[#cdd9ee]">
-          <a className="hover:text-white" href="/api/docs">API Docs</a>
-          <a className="hover:text-white" href="/api/">Overview</a>
-          <a className="hover:text-white" href="/config">Konfigurasi</a>
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} className="hover:text-white" href={link.href}>
+              {link.label}
+            </a>
+          ))}
         </nav>
       </div>
     </div>

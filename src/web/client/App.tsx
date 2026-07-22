@@ -1,30 +1,31 @@
 import { logoUrl, prodiPath, ptPath } from './constants.ts'
 import { nf, text, year } from './lib/format.ts'
 import { useEndpoint } from './hooks/use-endpoint.ts'
-import { clearSelectedPt, useSelectedPt } from './hooks/use-selected-pt.ts'
+import { clearSelectedPt } from './hooks/use-selected-pt.ts'
+import { useRoute } from './hooks/use-route.ts'
 import { accreditationTone } from './theme.ts'
 import { CONTAINER, Header } from './components/Layout.tsx'
 import { Async, Badge, Chip, InfoRow, Pill, Section, StatCard, Table, Td, Th } from './components/ui.tsx'
+import { ConfigPage } from './components/ConfigPage.tsx'
 import { Lecturers } from './components/Lecturers.tsx'
 import { Students } from './components/Students.tsx'
 import { PtSearch } from './components/PtSearch.tsx'
 import type { Prodi, PtCost, PtDetail, PtMahasiswa, PtNameHistory, PtRasio, PtStudyDuration } from './types.ts'
 
 export function App() {
-  const id = useSelectedPt()
-  if (id === null) {
-    return (
-      <>
-        <Header />
-        <main className="pb-16">
-          <div className={`${CONTAINER} pt-8`}>
-            <PtSearch />
-          </div>
-        </main>
-      </>
-    )
-  }
-  return <Profile id={id} />
+  const route = useRoute()
+  if (route.name === 'config') return <ConfigPage />
+  if (route.name === 'profile') return <Profile id={route.id} />
+  return (
+    <>
+      <Header />
+      <main className="pb-16">
+        <div className={`${CONTAINER} pt-8`}>
+          <PtSearch />
+        </div>
+      </main>
+    </>
+  )
 }
 
 function Profile({ id }: { id: string }) {
