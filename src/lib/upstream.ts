@@ -41,12 +41,22 @@ function isConnectionError(err: unknown): boolean {
   return false
 }
 
+/** Origin of an upstream base URL ('' when it isn't a parseable absolute URL). */
+function originOf(baseUrl: string): string {
+  try {
+    return new URL(baseUrl).origin
+  } catch {
+    return ''
+  }
+}
+
 /**
  * The single network egress point. Forwards GET requests to the upstream PDDikti
  * source with auth headers, a rotating User-Agent, and caller identity headers.
  */
 export class UpstreamClient {
   private readonly baseUrl: string
+  private readonly origin: string
   private readonly headers: Record<string, string>
   private readonly timeoutMs: number
   private readonly fetchImpl: FetchLike
@@ -56,6 +66,7 @@ export class UpstreamClient {
 
   constructor(options: UpstreamOptions) {
     this.baseUrl = options.baseUrl.replace(/\/+$/, '')
+    this.origin = originOf(this.baseUrl)
     this.headers = options.headers
     this.timeoutMs = options.timeoutMs
     this.fetchImpl = options.fetchImpl ?? fetch
@@ -129,6 +140,14 @@ export class UpstreamClient {
     const headers: Record<string, string> = { ...base }
     if (!Object.keys(headers).some((k) => k.toLowerCase() === 'user-agent')) {
       headers['User-Agent'] = randomUserAgent()
+    }
+    // The upstream's WAF rejects requests that don't look like they came from its own
+    // site (403), so default Referer/Origin to the upstream origin. Configured
+    // UPSTREAM_HEADERS (any case) still win.
+    if (this.origin !== '') {
+      const present = new Set(Object.keys(headers).map((k) => k.toLowerCase()))
+      if (!present.has('referer')) headers['Referer'] = `${this.origin}/`
+      if (!present.has('origin')) headers['Origin'] = this.origin
     }
     if (identity.clientIp) {
       headers['X-Forwarded-For'] = identity.clientIp
