@@ -51,6 +51,7 @@ src/
                     components/ (UI + views), hooks/ (use-endpoint, use-selected-pt,
                     use-debounced-value), lib/ (constants, format, theme), styles.css
 tests/              *.test.ts (bun:test)
+docs/ARCHITECTURE.md  design overview for humans (keep in sync with this file)
 ```
 
 ## Web client (root `/`)
@@ -207,5 +208,21 @@ Cross-prodi aggregations with no single upstream (e.g. all university lecturers)
 ## Commits
 
 Conventional Commits, imperative, lower-case scope: `feat(api): add dosen routes`,
-`feat(upstream): fetch-based proxy client`, `chore:`, `test:`, `docs:`, `fix:`.
-Commit per logical unit (one route group per commit). Never `git add .env`.
+`feat(upstream): fetch-based proxy client`, `chore:`, `test:`, `docs:`, `fix:`, `build:`,
+`ci:`. Commit per logical unit (one route group per commit). Never `git add .env` or
+`runtime-config.json`.
+
+## Licensing and releases
+
+- The project is **AGPL-3.0-or-later**. Every source file starts with the SPDX header:
+
+  ```ts
+  // SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+  // SPDX-License-Identifier: AGPL-3.0-or-later
+  ```
+
+- Versions follow **SemVer**. Record user-facing changes under `## [Unreleased]` in
+  `CHANGELOG.md` (Keep a Changelog format). A release moves those entries under a new
+  version heading, bumps `version` in `package.json`, and adds an annotated `vX.Y.Z` tag;
+  the release workflow publishes the GitHub release from that changelog section.
+- Dependencies are pinned to exact versions; Dependabot proposes bumps.
