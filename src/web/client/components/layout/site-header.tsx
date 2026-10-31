@@ -11,22 +11,18 @@ import { useScrolled } from '@/hooks/use-scrolled'
 
 /**
  * Sticky top bar: brand, primary navigation, and the theme toggle. It blends into the page
- * at the top and lifts onto a floating card once the page scrolls.
+ * at the top and lifts onto a floating card once the page scrolls; content scrolls
+ * behind it, and the transparent gutter around the card passes clicks through.
  */
 export function SiteHeader({ activeHref }: { activeHref: string }) {
   const scrolled = useScrolled()
 
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-40 pt-4 pb-3 transition-colors duration-200 [view-transition-name:site-header]',
-        scrolled ? 'bg-background' : 'bg-transparent',
-      )}
-    >
+    <header className="pointer-events-none sticky top-0 z-40 pt-4 pb-3 [view-transition-name:site-header]">
       <PageContainer>
         <div
           className={cn(
-            'flex h-14 items-center gap-6 rounded-2xl px-3 transition-[background-color,box-shadow] duration-200',
+            'pointer-events-auto flex h-14 items-center gap-6 rounded-2xl px-3 transition-[background-color,box-shadow] duration-200',
             scrolled ? 'bg-card shadow-float' : 'bg-transparent shadow-none',
           )}
         >
