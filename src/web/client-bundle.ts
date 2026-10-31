@@ -3,6 +3,7 @@
 
 import tailwind from 'bun-plugin-tailwind'
 import { loadConfig } from '../config.ts'
+import { DEV_RELOAD_SCRIPT_PATH } from './dev-reload.ts'
 
 /** Resolve client assets relative to this file, independent of cwd. */
 const HTML_PATH = new URL('./client/index.html', import.meta.url).pathname
@@ -56,9 +57,11 @@ export async function getClientScript(): Promise<string> {
   return (await buildClient()).script
 }
 
-/** The HTML shell served at the root. */
-export function getClientHtml(): Promise<string> {
-  return Bun.file(HTML_PATH).text()
+/** The HTML shell served at the root; under DEBUG it also loads the live-reload script. */
+export async function getClientHtml(): Promise<string> {
+  const html = await Bun.file(HTML_PATH).text()
+  if (!loadConfig().DEBUG) return html
+  return html.replace('</body>', `  <script src="${DEV_RELOAD_SCRIPT_PATH}"></script>\n  </body>`)
 }
 
 /** The favicon bytes (image/x-icon). Cached after first read. */

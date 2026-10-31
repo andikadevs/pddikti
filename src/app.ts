@@ -27,6 +27,7 @@ import pt from './routes/pt.ts'
 import search from './routes/search.ts'
 import stats from './routes/stats.ts'
 import { getClientFavicon, getClientHtml, getClientScript, getClientStyles } from './web/client-bundle.ts'
+import { devReload } from './web/dev-reload.ts'
 import seo from './web/seo.ts'
 import type { AppEnv } from './types.ts'
 
@@ -144,6 +145,7 @@ export function buildApp(): OpenAPIHono<AppEnv> {
   // JSON config API (password-gated); the UI is a React view at /#/config.
   app.route('/config', configApi)
   app.route('/', seo)
+  if (loadConfig().DEBUG) app.route('/__dev', devReload)
 
   return app
 }
