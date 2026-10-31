@@ -1,9 +1,31 @@
 {
   "name": "pddikti-api",
   "version": "0.7.0",
+  "private": true,
+  "description": "Read-only proxy API and MCP server for Indonesian higher-education data (PDDikti).",
+  "keywords": [
+    "pddikti",
+    "indonesia",
+    "higher-education",
+    "api",
+    "mcp",
+    "bun",
+    "hono"
+  ],
+  "homepage": "https://github.com/andikadevs/pddikti#readme",
+  "bugs": {
+    "url": "https://github.com/andikadevs/pddikti/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andikadevs/pddikti.git"
+  },
   "license": "AGPL-3.0-or-later",
-  "description": "Bun + Hono API for structured access to Indonesia higher-education data (PDDikti).",
+  "author": "Andika Dwi Saputra <hello@andikadevs.space> (https://andikadevs.space)",
   "type": "module",
+  "engines": {
+    "bun": ">=1.3"
+  },
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
@@ -15,20 +37,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono/swagger-ui": "^0.5.0",
-    "@hono/zod-openapi": "^0.18.0",
-    "@modelcontextprotocol/sdk": "^1.29.0",
-    "bun-plugin-tailwind": "^0.1.2",
-    "hono": "^4.12.26",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "tailwindcss": "^4.3.1",
-    "zod": "^3.23.0"
+    "@hono/swagger-ui": "0.5.3",
+    "@hono/zod-openapi": "0.18.4",
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "bun-plugin-tailwind": "0.1.2",
+    "hono": "4.12.26",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "tailwindcss": "4.3.1",
+    "zod": "3.25.76"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "typescript": "^5.6.0"
+    "@types/bun": "1.3.14",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.9.3"
   }
 }
