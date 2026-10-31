@@ -75,7 +75,7 @@ docs/ARCHITECTURE.md  design overview for humans (keep in sync with this file)
     `fetch-json` (deduplicating GET cache), `format`, `accreditation`, `view-transition`,
     `types`, `utils` (`cn`).
   - **`hooks/`** state only: `use-endpoint`, `use-route`, `use-search-query`,
-    `use-row-filter`, `use-visible-rows`, `use-theme`, `use-debounced-value`.
+    `use-row-filter`, `use-visible-rows`, `use-theme`, `use-debounced-value`, `use-scrolled`.
   - **`components/ui/`** shadcn primitives; **`components/layout/`** site frame;
     **`components/common/`** shared building blocks (`async-content`, `section-card`,
     `stat-card`, `detail-list`, `search-input`, `table-toolbar`, `empty-state`, …).

@@ -7,13 +7,29 @@ import { cn } from '@/lib/utils'
 import { AppLink } from '@/components/common/app-link'
 import { PageContainer } from '@/components/layout/page-container'
 import { ThemeToggle } from '@/components/layout/theme-toggle'
+import { useScrolled } from '@/hooks/use-scrolled'
 
-/** Sticky top bar: brand, primary navigation, and the theme toggle. */
+/**
+ * Sticky top bar: brand, primary navigation, and the theme toggle. It blends into the page
+ * at the top and lifts onto a floating card once the page scrolls.
+ */
 export function SiteHeader({ activeHref }: { activeHref: string }) {
+  const scrolled = useScrolled()
+
   return (
-    <header className="sticky top-0 z-40 bg-background pt-4 pb-3 [view-transition-name:site-header]">
+    <header
+      className={cn(
+        'sticky top-0 z-40 pt-4 pb-3 transition-colors duration-200 [view-transition-name:site-header]',
+        scrolled ? 'bg-background' : 'bg-transparent',
+      )}
+    >
       <PageContainer>
-        <div className="flex h-14 items-center gap-6 rounded-2xl bg-card px-3 shadow-float">
+        <div
+          className={cn(
+            'flex h-14 items-center gap-6 rounded-2xl px-3 transition-[background-color,box-shadow] duration-200',
+            scrolled ? 'bg-card shadow-float' : 'bg-transparent shadow-none',
+          )}
+        >
         <AppLink href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <GraduationCapIcon className="size-4" />
