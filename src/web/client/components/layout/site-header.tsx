@@ -10,7 +10,7 @@ import { ThemeToggle } from '@/components/layout/theme-toggle'
 /** Sticky top bar: brand, primary navigation, and the theme toggle. */
 export function SiteHeader({ activeHref }: { activeHref: string }) {
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 border-b [view-transition-name:site-header] bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <PageContainer className="flex h-14 items-center gap-6">
         <a href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
