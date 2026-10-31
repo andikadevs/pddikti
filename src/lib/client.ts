@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { loadConfig } from '../config.ts'
 import { getCache } from './cache.ts'
 import { getFreshClearance } from './cf-solver.ts'

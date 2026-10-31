@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { buildApp } from '../src/app.ts'

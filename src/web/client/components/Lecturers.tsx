@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { lecturersPath } from '../constants.ts'
 import { text } from '../lib/format.ts'
 import { useEndpoint } from '../hooks/use-endpoint.ts'

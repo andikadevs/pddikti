@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { BRAND, NAV_LINKS } from '../../nav.ts'
 import { clearSelectedPt } from '../hooks/use-selected-pt.ts'
 

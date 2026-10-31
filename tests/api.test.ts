@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { beforeEach, describe, expect, test } from 'bun:test'
 import { appNoUpstream, appWithUpstream, applyEnv, jsonFetch } from './helpers.ts'
 import type { FetchLike } from '../src/types.ts'

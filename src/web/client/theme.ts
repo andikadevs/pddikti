@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /** Map an accreditation value to a badge tone class. */
 export function accreditationTone(value: string | null | undefined): 'good' | 'plain' {
   if (!value) return 'plain'

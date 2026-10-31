@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /**
  * Single source of truth for the top-bar brand + nav links, shared by the React SPA
  * header (`web/client/components/Layout.tsx`) and the server-rendered config page

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /** Client-side constants and path builders for the PT profile explorer. */
 
 export const API_BASE = '/api'

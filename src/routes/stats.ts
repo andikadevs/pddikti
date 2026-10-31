@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { getUpstream } from '../lib/client.ts'
 import { identityOf, proxyResponses, sendProxy } from '../lib/handler.ts'

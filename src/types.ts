@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /**
  * Centralized shared types for the proxy.
  * Domain/value types live here; Zod-derived schema types live in schemas/.

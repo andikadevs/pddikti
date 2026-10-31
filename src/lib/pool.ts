@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /** Run `fn` over `items` with at most `limit` concurrent executions, preserving order. */
 export async function mapLimit<T, R>(
   items: readonly T[],

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { randomUUID } from 'node:crypto'
 import { Hono } from 'hono'
 import type { Context } from 'hono'

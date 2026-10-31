@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /** Presentation helpers shared across the SPA. Keep pure (no React). */
 
 /** Locale number formatter for Indonesian grouping (e.g. 1.086). */

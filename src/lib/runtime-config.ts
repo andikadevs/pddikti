@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { z } from '@hono/zod-openapi'
 import { loadConfig } from '../config.ts'

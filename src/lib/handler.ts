@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import type { Context } from 'hono'
 import { loadConfig } from '../config.ts'
 import { ProxyResponse } from '../schemas/common.ts'

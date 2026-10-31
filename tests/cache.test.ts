@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import type { RedisClient } from 'bun'
 import { buildApp } from '../src/app.ts'

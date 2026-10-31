@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /**
  * Encode a single URL path segment.
  * Decodes first so an already-encoded value is not double-encoded, then encodes.

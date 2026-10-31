@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { useEffect, useState, type FormEvent } from 'react'
 import { CONTAINER, Header } from './Layout.tsx'
 import { Section } from './ui.tsx'
