@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Andika Dwi Saputra <hello@andikadevs.space>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/** Client-side constants and path builders for the PT profile explorer. */
+/** Path builders for the API endpoints the SPA reads. */
 
 export const API_BASE = '/api'
 
@@ -37,3 +37,6 @@ export function searchPtPath(keyword: string): string {
 export function searchMhsPath(keyword: string): string {
   return `${API_BASE}/search/mhs/${encodeURIComponent(keyword)}/`
 }
+
+/** `/mcp/tools` MCP tool catalog. */
+export const MCP_TOOLS_PATH = '/mcp/tools'
