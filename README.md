@@ -1,15 +1,27 @@
-# PDDikti API
+# PDDikti API & MCP Server
 
 [![CI](https://github.com/andikadevs/pddikti/actions/workflows/ci.yml/badge.svg)](https://github.com/andikadevs/pddikti/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/andikadevs/pddikti)](https://github.com/andikadevs/pddikti/releases)
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](./LICENSE)
+[![MCP server](https://img.shields.io/badge/MCP-server-black)](#mcp-server)
+[![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-green)](./openapi.json)
 
-Read-only proxy API and MCP server for Indonesian higher-education data from
-[PDDikti](https://pddikti.kemdiktisaintek.go.id): universities, study programs, lecturers,
-students, and aggregate statistics.
+Open-source **PDDikti API** and **PDDikti MCP server** for Indonesian higher-education data
+from [PDDikti](https://pddikti.kemdiktisaintek.go.id) (Pangkalan Data Pendidikan Tinggi):
+universities, study programs, lecturers, students, and aggregate statistics.
 
-Built with Bun, Hono, and Zod. It ships generated OpenAPI docs, a React explorer, and
-automatic Cloudflare clearance through FlareSolverr.
+- **REST API** with an OpenAPI 3.1 spec, Swagger UI, and ReDoc.
+- **MCP server** (Model Context Protocol) over stdio and Streamable HTTP, for Claude, Cursor,
+  and other AI agents.
+- **Web explorer** to search a university and browse its profile.
+
+Built with Bun, Hono, and Zod. Upstream Cloudflare clearance is automatic through
+FlareSolverr.
+
+> **Bahasa Indonesia:** API PDDikti dan MCP PDDikti tidak resmi dan open source. Dipakai
+> untuk cek data perguruan tinggi, program studi, dosen, dan mahasiswa dari sistem PDDikti
+> (dulu Forlap Dikti) lewat REST API, OpenAPI, atau AI agent. Lihat
+> [Ringkasan dalam Bahasa Indonesia](#ringkasan-dalam-bahasa-indonesia).
 
 ## Features
 
@@ -30,6 +42,8 @@ automatic Cloudflare clearance through FlareSolverr.
 - [MCP clients](#mcp-clients)
 - [Upstream access](#upstream-access)
 - [Development](#development)
+- [Ringkasan dalam Bahasa Indonesia](#ringkasan-dalam-bahasa-indonesia)
+- [FAQ](#faq)
 - [Contributing](#contributing)
 - [License](#license)
 - [Disclaimer](#disclaimer)
@@ -227,6 +241,66 @@ A change is done when `bun run typecheck` is clean and `bun test` is green.
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md): design, request flow, and source layout.
 - [CLAUDE.md](./CLAUDE.md): detailed coding conventions.
 - [CHANGELOG.md](./CHANGELOG.md): release history.
+
+## Ringkasan dalam Bahasa Indonesia
+
+Proyek ini menyediakan **API PDDikti** dan **MCP server PDDikti** yang bisa kamu jalankan
+sendiri. Datanya berasal dari PDDikti (Pangkalan Data Pendidikan Tinggi) milik
+Kemdiktisaintek, sistem yang dulu dikenal sebagai Forlap Dikti.
+
+Yang bisa kamu lakukan:
+
+- **Cek data perguruan tinggi**: profil kampus, akreditasi, status, lokasi, biaya kuliah,
+  dan riwayat nama.
+- **Cek program studi (prodi)**: daftar prodi, jenjang, akreditasi, dan rasio dosen
+  mahasiswa.
+- **Cek data dosen**: pencarian dosen dan daftar dosen per kampus atau prodi.
+- **Cek data mahasiswa**: pencarian mahasiswa berdasarkan nama atau NIM.
+- **Statistik pendidikan tinggi**: jumlah kampus, prodi, dosen, dan mahasiswa.
+
+Cara pakai:
+
+| Kebutuhan                         | Pakai                                                  |
+| --------------------------------- | ------------------------------------------------------ |
+| Integrasi ke aplikasi atau backend | REST API `/api/*`, dokumentasi di `/api/docs`          |
+| AI agent (Claude, Cursor, dll.)    | MCP server: `bun run mcp` atau `POST /mcp`             |
+| Cari kampus lewat browser          | Web explorer di `/`                                    |
+
+Mulai dari [Quick start](#quick-start). Proyek ini tidak berafiliasi dengan PDDikti atau
+Kemdiktisaintek.
+
+## FAQ
+
+### Is this the official PDDikti API?
+
+No. PDDikti does not publish a public API. This project is an unofficial, self-hosted proxy
+in front of the data that the [PDDikti website](https://pddikti.kemdiktisaintek.go.id)
+uses. It is not affiliated with PDDikti or Kemdiktisaintek.
+
+### Apakah ini API PDDikti resmi?
+
+Bukan. PDDikti tidak menyediakan API publik. Proyek ini adalah proxy tidak resmi yang kamu
+host sendiri, di depan data yang dipakai situs PDDikti.
+
+### What data can I get?
+
+Universities (perguruan tinggi), study programs (program studi), lecturers (dosen),
+students (mahasiswa), and aggregate statistics. See [`openapi.json`](./openapi.json) for
+every endpoint.
+
+### How do I use PDDikti with an AI agent?
+
+Run the MCP server and add it to your client. See [MCP clients](#mcp-clients) for Claude
+Code, Claude Desktop, claude.ai, and other MCP clients.
+
+### Is there a hosted version?
+
+No. Deploy your own instance with Docker Compose or Bun. See [Quick start](#quick-start).
+
+### Bagaimana cara cek data mahasiswa atau dosen di PDDikti lewat API?
+
+Panggil endpoint pencarian, misalnya `GET /api/search/mhs/<nama-atau-nim>/` untuk mahasiswa
+atau `GET /api/search/dosen/<nama>/` untuk dosen. Daftar lengkap ada di `/api/docs`.
 
 ## Contributing
 
