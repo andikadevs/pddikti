@@ -7,7 +7,7 @@ import { HomePage } from '@/features/home/home-page'
 import { McpDocsPage } from '@/features/mcp-docs/mcp-docs-page'
 import { PtProfilePage } from '@/features/pt-profile/pt-profile-page'
 import { useRoute } from '@/hooks/use-route'
-import { routeHref, type Route } from '@/lib/navigation'
+import { routePath, type Route } from '@/lib/navigation'
 
 function RouteView({ route }: { route: Route }) {
   switch (route.name) {
@@ -23,11 +23,11 @@ function RouteView({ route }: { route: Route }) {
   }
 }
 
-/** Root component: the shared layout around the view for the current hash route. */
+/** Root component: the shared layout around the view for the current route. */
 export function App() {
   const route = useRoute()
   return (
-    <SiteLayout activeHref={routeHref(route)}>
+    <SiteLayout activeHref={routePath(route)}>
       <RouteView route={route} />
     </SiteLayout>
   )

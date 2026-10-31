@@ -3,6 +3,7 @@
 
 import { ArrowLeftIcon } from 'lucide-react'
 import { useState } from 'react'
+import { AppLink } from '@/components/common/app-link'
 import { PageContainer } from '@/components/layout/page-container'
 import { buttonVariants } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -19,10 +20,10 @@ export function PtProfilePage({ id }: { id: string }) {
   const [tab, setTab] = useState('overview')
   return (
     <PageContainer className="space-y-8 pt-6">
-      <a href="#" className={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ml-2' })}>
+      <AppLink href="/" className={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ml-2' })}>
         <ArrowLeftIcon data-icon="inline-start" />
         Cari kampus lain
-      </a>
+      </AppLink>
       <PtHero id={id} />
       <PtStats id={id} />
       <Tabs value={tab} onValueChange={(value: string) => withViewTransition(() => setTab(value))} className="gap-6">

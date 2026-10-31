@@ -3,6 +3,7 @@
 
 import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
+import type { Context } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { prettyJSON } from 'hono/pretty-json'
@@ -28,6 +29,7 @@ import search from './routes/search.ts'
 import stats from './routes/stats.ts'
 import { getClientFavicon, getClientHtml, getClientScript, getClientStyles } from './web/client-bundle.ts'
 import { devReload } from './web/dev-reload.ts'
+import { APP_PATHS } from './web/nav.ts'
 import seo from './web/seo.ts'
 import type { AppEnv } from './types.ts'
 
@@ -102,10 +104,10 @@ export function buildApp(): OpenAPIHono<AppEnv> {
   app.use('*', availability)
   app.use('*', apiKey)
 
-  // React SPA (PT profile explorer) at the root, bundled natively via Bun.build. When auth
-  // is on, mint an httpOnly session cookie so the same-origin SPA can call /api/*
-  // without ever holding the API key in JS.
-  app.get('/', async (c) => {
+  // React SPA, bundled natively via Bun.build. Every client-side route serves the same
+  // HTML shell; the SPA picks the view from the path. When auth is on, mint an httpOnly
+  // session cookie so the same-origin SPA can call /api/* without holding the API key in JS.
+  const serveSpa = async (c: Context<AppEnv>) => {
     const config = loadConfig()
     if (config.API_KEY !== '') {
       const exp = Math.floor(Date.now() / 1000) + config.SESSION_TTL_S
@@ -118,7 +120,10 @@ export function buildApp(): OpenAPIHono<AppEnv> {
       })
     }
     return c.html(await getClientHtml())
-  })
+  }
+  for (const path of [APP_PATHS.home, APP_PATHS.mcpDocs, APP_PATHS.config, `${APP_PATHS.profilePrefix}:id`]) {
+    app.get(path, serveSpa)
+  }
   app.get('/app.js', async (c) => {
     const script = await getClientScript()
     return c.body(script, 200, { 'Content-Type': 'text/javascript; charset=utf-8' })

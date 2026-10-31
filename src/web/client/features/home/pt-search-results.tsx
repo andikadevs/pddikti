@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { ChevronRightIcon, SearchXIcon } from 'lucide-react'
+import { AppLink } from '@/components/common/app-link'
 import { AsyncContent } from '@/components/common/async-content'
 import { EmptyState } from '@/components/common/empty-state'
 import { LoadingLines } from '@/components/common/loading-lines'
@@ -9,7 +10,7 @@ import { Card } from '@/components/ui/card'
 import { useEndpoint } from '@/hooks/use-endpoint'
 import { searchPtPath } from '@/lib/api-paths'
 import { num, text } from '@/lib/format'
-import { profileHref } from '@/lib/navigation'
+import { profilePath } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
 import type { PtSearchHit } from '@/lib/types'
 
@@ -27,9 +28,9 @@ function ResultRow({ hit }: { hit: PtSearchHit }) {
   )
   const layout = 'group flex items-center justify-between gap-4 rounded-xl px-3 py-2.5'
   return hit.id ? (
-    <a href={profileHref(hit.id)} className={cn(layout, 'transition-colors hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-none')}>
+    <AppLink href={profilePath(hit.id)} className={cn(layout, 'transition-colors hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-none')}>
       {body}
-    </a>
+    </AppLink>
   ) : (
     <div className={cn(layout, 'opacity-60')}>{body}</div>
   )

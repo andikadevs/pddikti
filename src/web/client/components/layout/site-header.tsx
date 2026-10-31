@@ -4,24 +4,25 @@
 import { GraduationCapIcon } from 'lucide-react'
 import { BRAND, NAV_LINKS } from '../../../nav.ts'
 import { cn } from '@/lib/utils'
+import { AppLink } from '@/components/common/app-link'
 import { PageContainer } from '@/components/layout/page-container'
 import { ThemeToggle } from '@/components/layout/theme-toggle'
 
 /** Sticky top bar: brand, primary navigation, and the theme toggle. */
 export function SiteHeader({ activeHref }: { activeHref: string }) {
   return (
-    <header className="sticky top-0 z-40 pt-3 [view-transition-name:site-header]">
+    <header className="sticky top-0 z-40 bg-background pt-4 pb-3 [view-transition-name:site-header]">
       <PageContainer>
-        <div className="flex h-14 items-center gap-6 rounded-2xl bg-card/80 px-3 shadow-float backdrop-blur-md supports-[backdrop-filter]:bg-card/70">
-        <a href="/" className="flex items-center gap-2 font-semibold tracking-tight">
+        <div className="flex h-14 items-center gap-6 rounded-2xl bg-card px-3 shadow-float">
+        <AppLink href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <GraduationCapIcon className="size-4" />
           </span>
           {BRAND}
-        </a>
+        </AppLink>
         <nav aria-label="Navigasi utama" className="no-scrollbar -mx-2 flex flex-1 items-center overflow-x-auto text-sm">
           {NAV_LINKS.map((link) => (
-            <a
+            <AppLink
               key={link.href}
               href={link.href}
               aria-current={link.href === activeHref ? 'page' : undefined}
@@ -31,7 +32,7 @@ export function SiteHeader({ activeHref }: { activeHref: string }) {
               )}
             >
               {link.label}
-            </a>
+            </AppLink>
           ))}
         </nav>
         <ThemeToggle />
