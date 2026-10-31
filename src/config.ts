@@ -32,7 +32,7 @@ const headersFromEnv = z
       return parsed as Record<string, string>
     } catch (err) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: `UPSTREAM_HEADERS must be a JSON object of string values: ${(err as Error).message}`,
       })
       return z.NEVER
@@ -41,9 +41,8 @@ const headersFromEnv = z
 
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
-  DEBUG: booleanFromEnv.default('false'),
+  DEBUG: booleanFromEnv.prefault('false'),
   PUBLIC_BASE_URL: z
-    .string()
     .url()
     .default('http://localhost:3000')
     .transform((v) => v.replace(/\/+$/, '')),
@@ -52,10 +51,10 @@ const envSchema = z.object({
     .string()
     .default('')
     .transform((v) => v.replace(/\/+$/, '')),
-  UPSTREAM_HEADERS: headersFromEnv.default('{}'),
+  UPSTREAM_HEADERS: headersFromEnv.prefault('{}'),
   UPSTREAM_TIMEOUT_MS: z.coerce.number().int().positive().default(8000),
 
-  API_AVAILABILITY: booleanFromEnv.default('true'),
+  API_AVAILABILITY: booleanFromEnv.prefault('true'),
   API_VERSION: z.string().default('1.0.0'),
   LAST_UPDATE: z.string().default('2026-06-19T00:00:00+07:00'),
 
@@ -74,13 +73,13 @@ const envSchema = z.object({
 
   // Auto-solver: when enabled, a 403 (Cloudflare challenge) calls a FlareSolverr sidecar
   // (SOLVER_URL) to harvest a fresh cf_clearance + User-Agent, saved and the request retried.
-  SOLVER_ENABLED: booleanFromEnv.default('false'),
+  SOLVER_ENABLED: booleanFromEnv.prefault('false'),
   SOLVER_URL: z.string().default(''),
   SOLVER_TARGET_URL: z.string().default(''),
   SOLVER_TIMEOUT_MS: z.coerce.number().int().positive().default(60000),
 
   // Redis cache (optional). When disabled, the cache layer is a no-op passthrough.
-  CACHE_ENABLED: booleanFromEnv.default('false'),
+  CACHE_ENABLED: booleanFromEnv.prefault('false'),
   CACHE_TTL_S: z.coerce.number().int().positive().default(600),
   REDIS_URL: z.string().default(''),
   REDIS_HOST: z.string().default('localhost'),

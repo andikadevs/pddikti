@@ -22,7 +22,6 @@ import type { UpstreamOptions } from '../types.ts'
 const runtimeConfigSchema = z
   .object({
     baseUrl: z
-      .string()
       .url()
       .transform((v) => v.replace(/\/+$/, ''))
       .optional(),
