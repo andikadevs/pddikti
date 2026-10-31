@@ -14,9 +14,8 @@ import { cn } from '@/lib/utils'
 import type { PtSearchHit } from '@/lib/types'
 
 function ResultRow({ hit }: { hit: PtSearchHit }) {
-  const name = text(hit.nama_pt ?? hit.nama)
-  const shortName = hit.nm_singkat ?? hit.sinkatan_pt
-  const meta = [shortName, hit.kode_pt && `Kode ${hit.kode_pt}`].filter(Boolean).join(' · ')
+  const name = text(hit.nama)
+  const meta = [hit.nama_singkat, hit.kode && `Kode ${hit.kode}`].filter(Boolean).join(' · ')
   const body = (
     <>
       <div className="min-w-0">

@@ -90,9 +90,7 @@ export interface StudentHit {
 
 export interface PtSearchHit {
   id?: string
-  nama_pt?: string
   nama?: string
-  kode_pt?: string
-  nm_singkat?: string
-  sinkatan_pt?: string
+  nama_singkat?: string
+  kode?: string
 }

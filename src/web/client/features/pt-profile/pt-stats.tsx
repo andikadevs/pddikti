@@ -5,9 +5,14 @@ import { ClockIcon, GraduationCapIcon, UserPlusIcon, UsersIcon } from 'lucide-re
 import { StatCard } from '@/components/common/stat-card'
 import { useEndpoint } from '@/hooks/use-endpoint'
 import { ptPath } from '@/lib/api-paths'
-import { num, text } from '@/lib/format'
+import { num } from '@/lib/format'
 import type { PtMahasiswa, PtRasio, PtStudyDuration } from '@/lib/types'
 import { averageStudyYears, formatYears } from './study-duration'
+
+/** The ratio as reported ("1 : 25"), or a dash when the upstream has only a placeholder sentence. */
+function ratioLabel(ratio?: string): string {
+  return ratio && /\d/.test(ratio) ? ratio : '—'
+}
 
 /** Four headline metrics for a university. */
 export function PtStats({ id }: { id: string }) {
@@ -20,7 +25,7 @@ export function PtStats({ id }: { id: string }) {
       <StatCard
         icon={UsersIcon}
         label="Rasio dosen : mahasiswa"
-        value={text(ratio.data?.rasio)}
+        value={ratioLabel(ratio.data?.rasio)}
         hint="Jumlah dosen terhadap mahasiswa"
         loading={ratio.loading}
       />
