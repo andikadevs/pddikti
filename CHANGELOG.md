@@ -7,6 +7,13 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade to Zod 4, `@hono/zod-openapi` 1, and TypeScript 7. Path parameters in the
+  OpenAPI document now carry their descriptions.
+- Run on Bun 1.4 (Docker image and CI), and bump GitHub Actions and minor dependencies.
+- Dependabot no longer opens pull requests for major version updates.
+
 ## [1.0.0] - 2026-10-31
 
 First stable release. The REST API, MCP tools, and configuration variables are now
