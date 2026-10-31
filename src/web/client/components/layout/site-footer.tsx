@@ -20,7 +20,7 @@ export function SiteFooter() {
           </a>
           {' · '}
           <a href={REPOSITORY_URL} target="_blank" rel="noreferrer" className={LINK}>
-            Kode sumber
+            Source code
           </a>
         </p>
         <p>Data © PDDikti, Kemdiktisaintek. Proyek independen, tidak berafiliasi dengan PDDikti.</p>

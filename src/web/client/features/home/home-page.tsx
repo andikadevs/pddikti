@@ -16,7 +16,7 @@ export function HomePage() {
   const { input, setInput, query } = useSearchQuery()
 
   return (
-    <PageContainer className="max-w-3xl pt-12 sm:pt-20">
+    <PageContainer className="max-w-3xl pt-20 sm:pt-32">
       <div className="space-y-3 text-center">
         <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           Jelajahi data perguruan tinggi Indonesia
