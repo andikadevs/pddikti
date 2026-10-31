@@ -54,7 +54,7 @@ export function ConfigUpstreamForm({ current, solverEnabled, notice, onSave, onT
           tidak mengubah nilai yang tersimpan.
         </CardDescription>
         <CardAction>
-          <Badge variant={solverEnabled ? 'secondary' : 'outline'}>Solver {solverEnabled ? 'aktif' : 'nonaktif'}</Badge>
+          <Badge variant={solverEnabled ? 'secondary' : 'ghost'}>Solver {solverEnabled ? 'aktif' : 'nonaktif'}</Badge>
         </CardAction>
       </CardHeader>
       <form onSubmit={submit}>
@@ -76,13 +76,13 @@ export function ConfigUpstreamForm({ current, solverEnabled, notice, onSave, onT
             <Textarea id="curl" rows={4} value={input.curl} onChange={set('curl')} className="font-mono text-xs" placeholder="curl 'https://pddikti.kemdiktisaintek.go.id/api/…' -b 'cf_clearance=…' -H 'user-agent: …'" />
           </FormField>
         </CardContent>
-        <CardFooter className="mt-5 flex-wrap justify-between gap-2 border-t pt-4">
+        <CardFooter className="mt-5 flex-wrap justify-between gap-2">
           <div className="flex gap-2">
             <Button type="submit" disabled={pending}>
               <SaveIcon data-icon="inline-start" />
               {pending ? 'Menyimpan…' : 'Simpan'}
             </Button>
-            <Button type="button" variant="outline" onClick={() => void onTest()}>
+            <Button type="button" variant="secondary" onClick={() => void onTest()}>
               <PlugZapIcon data-icon="inline-start" />
               Tes koneksi
             </Button>

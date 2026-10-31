@@ -42,9 +42,9 @@ export function PtHero({ id }: { id: string }) {
         )}
         <div className="flex flex-wrap gap-2">
           {data?.akreditasi_pt ? <AccreditationBadge value={data.akreditasi_pt} withLabel /> : null}
-          {data?.status_pt ? <Badge variant="outline">{data.status_pt}</Badge> : null}
-          {data?.kelompok ? <Badge variant="outline">{data.kelompok}</Badge> : null}
-          {data?.kode_pt ? <Badge variant="outline">Kode {data.kode_pt}</Badge> : null}
+          {data?.status_pt ? <Badge variant="secondary">{data.status_pt}</Badge> : null}
+          {data?.kelompok ? <Badge variant="secondary">{data.kelompok}</Badge> : null}
+          {data?.kode_pt ? <Badge variant="secondary">Kode {data.kode_pt}</Badge> : null}
         </div>
       </div>
     </div>

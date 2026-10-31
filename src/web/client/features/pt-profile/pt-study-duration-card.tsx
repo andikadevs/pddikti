@@ -16,9 +16,9 @@ export function PtStudyDurationCard({ id }: { id: string }) {
     <SectionCard title="Masa studi per jenjang">
       <AsyncContent state={state} isEmpty={(rows) => rows.length === 0}>
         {(rows) => (
-          <ul className="divide-y text-sm">
+          <ul className="space-y-1 text-sm">
             {rows.map((row, i) => (
-              <li key={row.jenjang ?? i} className="flex justify-between py-2">
+              <li key={row.jenjang ?? i} className="flex justify-between rounded-lg bg-muted/50 px-3 py-2">
                 <span className="text-muted-foreground">{text(row.jenjang)}</span>
                 <span className="font-medium tabular-nums">{formatYears(row.mean_masa_studi)}</span>
               </li>

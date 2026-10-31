@@ -10,7 +10,7 @@ export function ShowMoreButton({ hiddenCount, onClick }: { hiddenCount: number; 
   if (hiddenCount === 0) return null
   return (
     <div className="flex justify-center pt-4">
-      <Button variant="outline" onClick={onClick}>
+      <Button variant="secondary" className="rounded-full" onClick={onClick}>
         Tampilkan lebih banyak ({num(hiddenCount)} lagi)
         <ChevronDownIcon data-icon="inline-end" />
       </Button>

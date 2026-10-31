@@ -9,7 +9,7 @@ import { logoUrl } from '@/lib/api-paths'
 export function PtLogo({ id, name }: { id: string; name: string }) {
   const [failed, setFailed] = useState(false)
   return (
-    <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white p-2 sm:size-24">
+    <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-2 shadow-soft sm:size-24">
       {failed ? (
         <GraduationCapIcon className="size-10 text-muted-foreground" aria-hidden />
       ) : (

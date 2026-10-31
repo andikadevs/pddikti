@@ -4,19 +4,26 @@
 import { PageContainer } from '@/components/layout/page-container'
 
 const REPOSITORY_URL = 'https://github.com/andikadevs/pddikti'
+const AUTHOR_URL = 'https://andikadevs.space'
 
-/** Site footer: data attribution and the source-code link the AGPL asks for. */
+const LINK = 'font-medium text-foreground underline-offset-4 hover:underline'
+
+/** Site footer: author credit, data attribution, and the source-code link the AGPL asks for. */
 export function SiteFooter() {
   return (
-    <footer className="border-t">
+    <footer>
       <PageContainer className="flex flex-col gap-2 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <p>Sumber data: PDDikti, Kemdiktisaintek. Data © PDDikti.</p>
         <p>
-          Proyek independen, tidak berafiliasi dengan PDDikti.{' '}
-          <a href={REPOSITORY_URL} target="_blank" rel="noreferrer" className="font-medium text-foreground underline-offset-4 hover:underline">
+          Dibuat oleh{' '}
+          <a href={AUTHOR_URL} target="_blank" rel="noreferrer" className={LINK}>
+            andikadevs.space
+          </a>
+          {' · '}
+          <a href={REPOSITORY_URL} target="_blank" rel="noreferrer" className={LINK}>
             Kode sumber
           </a>
         </p>
+        <p>Data © PDDikti, Kemdiktisaintek. Proyek independen, tidak berafiliasi dengan PDDikti.</p>
       </PageContainer>
     </footer>
   )

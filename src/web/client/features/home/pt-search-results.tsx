@@ -25,7 +25,7 @@ function ResultRow({ hit }: { hit: PtSearchHit }) {
       {hit.id ? <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" /> : null}
     </>
   )
-  const layout = 'group flex items-center justify-between gap-4 px-4 py-3'
+  const layout = 'group flex items-center justify-between gap-4 rounded-xl px-3 py-2.5'
   return hit.id ? (
     <a href={profileHref(hit.id)} className={cn(layout, 'transition-colors hover:bg-muted/60 focus-visible:bg-muted/60 focus-visible:outline-none')}>
       {body}
@@ -50,7 +50,7 @@ export function PtSearchResults({ query }: { query: string }) {
           <p className="text-sm text-muted-foreground">
             {num(hits.length)} hasil untuk <span className="font-medium text-foreground">"{query}"</span>
           </p>
-          <Card className="gap-0 divide-y py-0">
+          <Card className="gap-1 p-2">
             {hits.map((hit, i) => (
               <ResultRow key={hit.id ?? i} hit={hit} />
             ))}

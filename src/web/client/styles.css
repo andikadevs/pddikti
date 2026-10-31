@@ -10,13 +10,13 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design tokens (shadcn convention). Navy brand primary on neutral surfaces.
- * The design is flat by project convention: set --radius to e.g. 0.625rem to round it.
+ * Design tokens (shadcn convention). Navy brand primary; soft, rounded surfaces that float
+ * on a tinted background with shadows instead of borders.
  */
 :root {
-  --radius: 0rem;
+  --radius: 0.875rem;
 
-  --background: oklch(0.985 0.002 250);
+  --background: oklch(0.972 0.006 255);
   --foreground: oklch(0.2 0.03 262);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.2 0.03 262);
@@ -37,10 +37,11 @@
   --border: oklch(0.915 0.01 255);
   --input: oklch(0.915 0.01 255);
   --ring: oklch(0.55 0.12 262);
+  --shadow-color: 222 47% 20%;
 }
 
 .dark {
-  --background: oklch(0.16 0.02 262);
+  --background: oklch(0.15 0.02 262);
   --foreground: oklch(0.96 0.005 255);
   --card: oklch(0.2 0.025 262);
   --card-foreground: oklch(0.96 0.005 255);
@@ -61,6 +62,7 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.6 0.1 255);
+  --shadow-color: 222 60% 3%;
 }
 
 @theme inline {
@@ -88,6 +90,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --shadow-soft: 0 1px 2px hsl(var(--shadow-color) / 0.04), 0 4px 16px -2px hsl(var(--shadow-color) / 0.08);
+  --shadow-float: 0 2px 4px hsl(var(--shadow-color) / 0.05), 0 12px 32px -4px hsl(var(--shadow-color) / 0.14);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);

@@ -27,7 +27,7 @@ export function McpDocsPage() {
             atau stdio. Cara menghubungkan klien ada di README.
           </p>
         </div>
-        <a href={MCP_TOOLS_PATH} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline' })}>
+        <a href={MCP_TOOLS_PATH} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary' })}>
           Katalog JSON
           <ExternalLinkIcon data-icon="inline-end" />
         </a>

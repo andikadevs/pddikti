@@ -10,10 +10,11 @@ import { ThemeToggle } from '@/components/layout/theme-toggle'
 /** Sticky top bar: brand, primary navigation, and the theme toggle. */
 export function SiteHeader({ activeHref }: { activeHref: string }) {
   return (
-    <header className="sticky top-0 z-40 border-b [view-transition-name:site-header] bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-      <PageContainer className="flex h-14 items-center gap-6">
+    <header className="sticky top-0 z-40 pt-3 [view-transition-name:site-header]">
+      <PageContainer>
+        <div className="flex h-14 items-center gap-6 rounded-2xl bg-card/80 px-3 shadow-float backdrop-blur-md supports-[backdrop-filter]:bg-card/70">
         <a href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
+          <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <GraduationCapIcon className="size-4" />
           </span>
           {BRAND}
@@ -25,8 +26,8 @@ export function SiteHeader({ activeHref }: { activeHref: string }) {
               href={link.href}
               aria-current={link.href === activeHref ? 'page' : undefined}
               className={cn(
-                'shrink-0 rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground',
-                link.href === activeHref && 'font-medium text-foreground',
+                'shrink-0 rounded-full px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground',
+                link.href === activeHref && 'bg-muted font-medium text-foreground',
               )}
             >
               {link.label}
@@ -34,6 +35,7 @@ export function SiteHeader({ activeHref }: { activeHref: string }) {
           ))}
         </nav>
         <ThemeToggle />
+        </div>
       </PageContainer>
     </header>
   )

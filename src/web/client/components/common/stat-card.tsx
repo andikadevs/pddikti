@@ -27,7 +27,7 @@ export function StatCard({ label, value, hint, icon: Icon, loading = false }: St
           )}
           <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
         </div>
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-secondary text-secondary-foreground">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
           <Icon className="size-4" />
         </span>
       </CardContent>

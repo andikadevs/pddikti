@@ -20,10 +20,10 @@ export function PtNameHistoryCard({ id }: { id: string }) {
         empty={<EmptyState title="Belum ada perubahan nama" />}
       >
         {(rows) => (
-          <ol className="relative space-y-4 border-l pl-5">
+          <ol className="space-y-4 pl-5">
             {(rows ?? []).map((entry, i) => (
               <li key={i} className="relative text-sm">
-                <span className="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full border-2 border-background bg-primary" />
+                <span className="absolute top-1.5 -left-5 size-2.5 rounded-full bg-primary ring-4 ring-primary/15" />
                 <p className="font-medium">{text(entry.nama)}</p>
                 {entry.tahun ? <p className="text-muted-foreground">{entry.tahun}</p> : null}
                 {entry.keterangan ? <p className="mt-1 text-muted-foreground">{entry.keterangan}</p> : null}

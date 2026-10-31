@@ -33,12 +33,12 @@ export function HomePage() {
           placeholder="Cari nama perguruan tinggi…"
           aria-label="Cari perguruan tinggi"
           autoFocus
-          className="h-11 text-base"
+          className="h-12 rounded-2xl bg-card text-base shadow-float focus-visible:ring-ring/20"
         />
         <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
           <span>Contoh:</span>
           {EXAMPLE_QUERIES.map((example) => (
-            <Button key={example} variant="outline" size="sm" onClick={() => setInput(example)}>
+            <Button key={example} variant="secondary" size="sm" className="rounded-full" onClick={() => setInput(example)}>
               {example}
             </Button>
           ))}

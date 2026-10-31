@@ -50,7 +50,7 @@ function LecturersTable({ rows }: { rows: readonly Lecturer[] }) {
                   {l.jenjang_prodi ? <span className="text-muted-foreground"> ({l.jenjang_prodi})</span> : null}
                 </TableCell>
                 <TableCell>
-                  <Badge variant={l.status_aktif === 'Aktif' ? 'secondary' : 'outline'}>{text(l.status_aktif)}</Badge>
+                  <Badge variant={l.status_aktif === 'Aktif' ? 'secondary' : 'ghost'}>{text(l.status_aktif)}</Badge>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{text(l.ikatan_kerja)}</TableCell>
               </TableRow>
