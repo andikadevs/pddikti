@@ -1,59 +1,71 @@
 # PDDikti API
 
-Bun + Hono API providing structured access to Indonesia higher-education data (PDDikti):
-universities, study programs, lecturers, students, and aggregate statistics.
+[![CI](https://github.com/andikadevs/pddikti/actions/workflows/ci.yml/badge.svg)](https://github.com/andikadevs/pddikti/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/andikadevs/pddikti)](https://github.com/andikadevs/pddikti/releases)
+[![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](./LICENSE)
 
-This service is a typed proxy in front of a private upstream PDDikti data source, with
-auto-generated OpenAPI docs.
+Read-only proxy API and MCP server for Indonesian higher-education data from
+[PDDikti](https://pddikti.kemdiktisaintek.go.id): universities, study programs, lecturers,
+students, and aggregate statistics.
 
-## Requirements
+Built with Bun, Hono, and Zod. It ships generated OpenAPI docs, a React explorer, and
+automatic Cloudflare clearance through FlareSolverr.
 
-- [Bun](https://bun.com) ≥ 1.3
+## Features
 
-## Setup
+- **Typed REST API** under `/api/*`, validated with Zod, with Swagger UI and ReDoc.
+- **MCP server** over stdio and Streamable HTTP, so AI agents can query the same data.
+- **Web explorer**: search a university and browse its profile, study programs, lecturers,
+  and students.
+- **Hands-off upstream access**: a FlareSolverr sidecar refreshes the Cloudflare cookie on a
+  `403`. A password-protected config page is the manual fallback.
+- **Optional Redis cache** and **optional API key** for the REST surface.
+- **One-command deployment** with Docker Compose.
+
+## Contents
+
+- [Quick start](#quick-start)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [MCP clients](#mcp-clients)
+- [Upstream access](#upstream-access)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+- [Disclaimer](#disclaimer)
+
+## Quick start
+
+### Docker Compose (recommended)
+
+Runs the API, a FlareSolverr sidecar, and Redis.
+
+```sh
+git clone https://github.com/andikadevs/pddikti.git
+cd pddikti
+cp .env.example .env    # set UPSTREAM_BASE_URL and REDIS_PASSWORD
+docker compose up -d
+```
+
+The API container listens on port `3000` inside the Compose network and does not publish a
+host port. Route your reverse proxy to `api:3000`, or add a `ports` entry for local use.
+FlareSolverr and Redis stay internal.
+
+### Local (Bun)
+
+Requires [Bun](https://bun.com) 1.3 or newer.
 
 ```sh
 bun install
-cp .env.example .env   # set UPSTREAM_BASE_URL; supply Cloudflare creds at runtime (see below)
+cp .env.example .env    # set UPSTREAM_BASE_URL
+bun run dev
 ```
 
-## Run
+Open <http://localhost:3000>.
 
-```sh
-bun run dev     # hot reload
-bun run start   # start server
-```
+### Single container
 
-Open [http://localhost:3000](http://localhost:3000).
-
-## Docker setup
-
-Run as **three containers** — the API + a **FlareSolverr** sidecar (hands-off Cloudflare
-clearance) + **Redis** (response cache) — via the provided `docker-compose.yml`:
-
-```sh
-docker compose up -d          # build + start api (:3000) + flaresolverr
-docker compose logs -f api    # follow API logs
-docker compose down           # stop
-```
-
-What it wires:
-
-- **`api`** — built from the multi-stage `Dockerfile` (`oven/bun:1.3-alpine`, frozen-lockfile
-  deps-only install). Reads `.env`; compose also sets `SOLVER_ENABLED=true`,
-  `SOLVER_URL=http://flaresolverr:8191/v1`, and `CONFIG_STORE_PATH=/data/runtime-config.json`.
-- **`flaresolverr`** — `ghcr.io/flaresolverr/flaresolverr`, **internal only** (not published to
-  the host); its headless browser solves the Cloudflare challenge on a `403`.
-- **`redis`** — `redis:7-alpine` (password + AOF persistence), internal only; the API's cache.
-- **`config-data`** / **`redis-data`** volumes — persist the solved `cf_clearance` and the
-  cache across restarts.
-
-Only the API is reached (via the reverse proxy); FlareSolverr + Redis stay internal. For a
-public-facing
-setup put a TLS-terminating reverse proxy in front, and set `PUBLIC_BASE_URL`, `API_KEY`,
-and `CONFIG_PASSWORD` accordingly.
-
-Single image, no solver (refresh clearance manually via `/#/config`):
+Without the solver, refresh the Cloudflare cookie by hand on the config page.
 
 ```sh
 docker build -t pddikti .
@@ -62,81 +74,97 @@ docker run -p 3000:3000 --env-file .env pddikti
 
 ## Configuration
 
-All config is read once from the environment via `src/config.ts` (the only place that touches
-`process.env`). Bun auto-loads `.env`. Key variables:
+The service reads the environment once, in `src/config.ts`. Bun loads `.env` automatically.
+See [`.env.example`](./.env.example) for every variable.
 
-| Variable                            | Default                   | Purpose                                                              |
-| ----------------------------------- | ------------------------- | -------------------------------------------------------------------- |
-| `PORT`                            | `3000`                  | Listen port                                                          |
-| `PUBLIC_BASE_URL`                 | `http://localhost:3000` | Absolute base for docs links +`secure` cookies                     |
-| `UPSTREAM_BASE_URL`               | —                        | PDDikti API base (`https://pddikti.kemdiktisaintek.go.id/api`)     |
-| `UPSTREAM_TIMEOUT_MS`             | `15000`                 | Per-request upstream timeout                                         |
-| `API_KEY`                         | `` (off)                  | Gate`/api/*` (`X-API-Key` or SPA session cookie); empty = public |
-| `SESSION_TTL_S`                   | `86400`                 | Session/config cookie lifetime                                       |
-| `CONFIG_PASSWORD`                 | `` (off)                  | Enables the`/#/config` page; empty = disabled (404)                |
-| `CONFIG_STORE_PATH`               | `./runtime-config.json` | Where runtime overrides + solved cookie persist                      |
-| `SOLVER_ENABLED`                  | `false`                 | Auto-solve Cloudflare on`403` via FlareSolverr                     |
-| `SOLVER_URL`                      | —                        | FlareSolverr`/v1` endpoint                                         |
-| `CACHE_ENABLED` / `CACHE_TTL_S` | `false` / `600`       | Optional Redis response cache                                        |
-| `CREDIT_LINE`                     | `Data © PDDikti`       | Attribution injected into every JSON response                        |
+| Variable                        | Default                 | Purpose                                                       |
+| ------------------------------- | ----------------------- | ------------------------------------------------------------- |
+| `PORT`                          | `3000`                  | Listen port.                                                  |
+| `PUBLIC_BASE_URL`               | `http://localhost:3000` | Absolute base URL for docs links and `secure` cookies.        |
+| `UPSTREAM_BASE_URL`             | none                    | Upstream base, `https://pddikti.kemdiktisaintek.go.id/api`.   |
+| `UPSTREAM_TIMEOUT_MS`           | `15000`                 | Timeout per upstream request.                                 |
+| `API_KEY`                       | empty (off)             | Protects `/api/*` with `X-API-Key`. Empty means public.       |
+| `SESSION_TTL_S`                 | `86400`                 | Lifetime of the SPA session and config cookies.               |
+| `CONFIG_PASSWORD`               | empty (off)             | Enables the `/#/config` page. Empty disables it (404).        |
+| `CONFIG_STORE_PATH`             | `./runtime-config.json` | File for runtime overrides and the solved cookie.             |
+| `SOLVER_ENABLED`                | `false`                 | Solve Cloudflare challenges with FlareSolverr on a `403`.     |
+| `SOLVER_URL`                    | none                    | FlareSolverr `/v1` endpoint.                                  |
+| `CACHE_ENABLED` / `CACHE_TTL_S` | `false` / `600`         | Optional Redis response cache.                                |
+| `CREDIT_LINE`                   | `Data © PDDikti`        | Attribution added to every JSON response.                     |
 
-See `.env.example` for the full list.
+> [!IMPORTANT]
+> For a public deployment, put a TLS-terminating reverse proxy in front, set
+> `PUBLIC_BASE_URL` to the HTTPS URL, and set strong values for `API_KEY` and
+> `CONFIG_PASSWORD`. See [SECURITY.md](./SECURITY.md) for the full checklist.
 
-## Web UI
+## Usage
 
-- `GET /` — flat React **PT profile explorer**: search a university, pick one, and see its
-  profile, stats, cost, study duration, study programs, **all lecturers**, **student
-  search**, facilities, and name history. The selected university is carried in the URL hash
-  (`#/pt/<id>`). Bundled natively by a single `Bun.build` (JS + Tailwind v4 CSS via
-  `bun-plugin-tailwind`), no Vite. Client code is organized into `components/` (UI + views),
-  `hooks/` (`use-endpoint`, `use-selected-pt`, `use-debounced-value`), and `lib/`
-  (`constants`, `format`, `theme`). Requires a configured upstream (below) to show live data.
+### REST API
 
-## Docs
+| Path                | Description                         |
+| ------------------- | ----------------------------------- |
+| `/api/`             | Overview and service status         |
+| `/api/docs`         | Swagger UI                          |
+| `/api/redoc`        | ReDoc                               |
+| `/api/openapi.json` | Live OpenAPI document               |
 
-- Overview: `GET /api/`
-- Swagger UI: `/api/docs`
-- ReDoc: `/api/redoc`
-- OpenAPI spec: `/api/openapi.json` (live)
-- MCP tools: `/#/mcp` (readable view) · `/mcp/tools` (JSON catalog — the MCP analogue of
-  the OpenAPI spec)
-- Static spec: [`openapi.json`](./openapi.json) in the repo, for offline agent
-  reference. Regenerate after route changes with `bun run openapi:export`
-  (set `PUBLIC_BASE_URL` to stamp the `servers` URL, e.g.
-  `PUBLIC_BASE_URL=https://<host> bun run openapi:export`).
+A static copy of the spec lives in [`openapi.json`](./openapi.json) for offline use.
 
-## MCP (AI agent access)
-
-The same data is exposed to AI agents over the **Model Context Protocol**. Tools are
-consolidated and enum-driven (~10): `search_pddikti`, `get_university`,
-`get_university_study_programs`, `get_university_lecturers`, `get_study_program`,
-`get_study_program_lecturers`, `get_lecturer`, `get_student`, `get_statistics`,
-`list_study_programs_by_field`. Each routes through the same proxy egress, cache, and
-credit envelope as the REST API.
-
-Two transports:
-
-- **stdio** — `bun run mcp` (runs `src/mcp/stdio.ts`). For local clients.
-- **Streamable HTTP** — `POST /mcp` on the running server. For remote/hosted clients.
-  Always public (no API key) — even when `/api/*` is gated by `API_KEY` — so browser
-  clients like Claude.ai, which can't send a static `X-API-Key`, can connect.
-
-### Claude Code (CLI)
-
-Local (stdio) — from the repo root, env comes from `.env`:
+When `API_KEY` is set, send it on every data request:
 
 ```sh
-claude mcp add pddikti -- bun run /abs/path/to/pddikti/src/mcp/stdio.ts
+curl -H "X-API-Key: $API_KEY" http://localhost:3000/api/search/all/telkom/
 ```
 
-Or commit a project-scoped `.mcp.json` (already included — fill the env):
+Every JSON response includes a `credit` field. Upstream errors keep their HTTP status.
+
+### Web explorer
+
+`GET /` serves a React app. Search a university to see its profile, statistics, costs,
+study duration, study programs, all lecturers, a student search, facilities, and name
+history. The selected university is kept in the URL hash (`#/pt/<id>`).
+
+### MCP server
+
+The MCP server exposes about ten tools, such as `search_pddikti`, `get_university`,
+`get_lecturer`, and `get_statistics`. The tools use the same upstream client, cache, and
+credit envelope as the REST API.
+
+| Transport       | How to run                    | Use for        |
+| --------------- | ----------------------------- | -------------- |
+| stdio           | `bun run mcp`                 | Local clients  |
+| Streamable HTTP | `POST /mcp` on the server     | Remote clients |
+
+The tool catalog is at `GET /mcp/tools` (JSON) and `/#/mcp` (readable view).
+
+> [!NOTE]
+> `/mcp` is always public, even when `API_KEY` is set. Browser connectors cannot send a
+> static header, so only the `/api/*` REST surface is key-protected.
+
+## MCP clients
+
+### Claude Code
+
+```sh
+# Local, over stdio
+claude mcp add pddikti -- bun run /abs/path/to/pddikti/src/mcp/stdio.ts
+
+# Remote, over HTTP
+claude mcp add --transport http pddikti https://<host>/mcp
+```
+
+The repository also includes a project-scoped [`.mcp.json`](./.mcp.json).
+
+### Claude Desktop and other stdio clients
+
+Add the server to the client's config file, for example `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "pddikti": {
       "command": "bun",
-      "args": ["run", "./src/mcp/stdio.ts"],
+      "args": ["run", "/abs/path/to/pddikti/src/mcp/stdio.ts"],
       "env": {
         "UPSTREAM_BASE_URL": "https://pddikti.kemdiktisaintek.go.id/api",
         "CONFIG_STORE_PATH": "/abs/path/to/pddikti/runtime-config.json"
@@ -146,135 +174,84 @@ Or commit a project-scoped `.mcp.json` (already included — fill the env):
 }
 ```
 
-Pointing `CONFIG_STORE_PATH` at the same `runtime-config.json` the config page writes lets
-the stdio server reuse that Cloudflare clearance (or set `SOLVER_ENABLED`/`SOLVER_URL` to
-auto-resolve). See *Upstream config* below.
+Point `CONFIG_STORE_PATH` at the file the config page writes, so the stdio server reuses
+the same Cloudflare cookie. You can also set `SOLVER_ENABLED` and `SOLVER_URL`.
 
-Remote (HTTP) against a running instance:
+### Claude.ai and other web clients
 
-```sh
-claude mcp add --transport http pddikti https://<host>/mcp
-```
+Add a custom connector with the URL `https://<host>/mcp`.
 
-### Claude Desktop
-
-Edit `claude_desktop_config.json` (Settings → Developer → Edit Config) — same shape as
-`.mcp.json` above under `mcpServers`. Restart the app; tools appear under the 🔌 menu.
-
-### Claude.ai (web)
-
-Settings → **Connectors** → *Add custom connector* → URL `https://<host>/mcp`. The web UI
-cannot send a static `X-API-Key`/Basic-auth header, so `/mcp` is intentionally public (no
-key) regardless of `API_KEY` — the web connector works out of the box. Only the `/api/*`
-REST surface is key-gated.
-
-### Quick test
+### Test the server
 
 ```sh
 bun run mcp:inspect    # MCP Inspector against the stdio server
 
-# Or hit the HTTP endpoint directly (initialize handshake):
 curl -s https://<host>/mcp -X POST \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"probe","version":"1"}}}'
 ```
 
-## Upstream config
+## Upstream access
 
-This API proxies the official PDDikti backend, which lives at `.../api` on the main domain
-and is guarded by **Cloudflare bot management**. Only the base URL goes in `.env`:
+The PDDikti backend is protected by Cloudflare bot management. Each request needs a
+`cf_clearance` cookie and the exact `User-Agent` it was issued to. Without them, the
+upstream returns `403`. Without `UPSTREAM_BASE_URL`, `/api/*` returns `503`.
 
-```dotenv
-UPSTREAM_BASE_URL=https://pddikti.kemdiktisaintek.go.id/api
-```
+You supply the cookie at runtime, not in `.env`:
 
-Cloudflare needs a `cf_clearance` cookie + the **exact** `User-Agent` it was issued to (a
-mismatched/absent UA → `403`). You provide these **at runtime**, not in `.env`, two ways:
+- **Automatic.** Set `SOLVER_ENABLED=true` and `SOLVER_URL`. On a `403`, the service asks
+  FlareSolverr to solve the challenge, saves the new cookie to `CONFIG_STORE_PATH`, and
+  retries once. FlareSolverr runs its own headless browser, so this works on a server with
+  no display.
+- **Manual.** Set `CONFIG_PASSWORD` and open `/#/config`. Paste the cookie and User-Agent,
+  or a full "Copy as cURL" from your browser's DevTools. Changes apply without a restart
+  and persist across restarts.
 
-- **Manually via the config page** — set `CONFIG_PASSWORD`, open the **Konfigurasi** view
-  (`/#/config`, a React page backed by the `/config/*` JSON API), paste the
-  `cf_clearance` + User-Agent (or a full DevTools **Copy as cURL**, auto-parsed). Saved to
-  `CONFIG_STORE_PATH`, applied live, persists across restarts. Refresh when it expires.
-- **Automatically via the solver** — see *Auto-solver* below; a `403` self-heals with no
-  manual step.
+## Development
 
-(An optional `UPSTREAM_HEADERS` JSON env map is still accepted as a fallback baseline, but is
-overridden by the runtime config and normally left unset.)
+| Command                  | Purpose                                      |
+| ------------------------ | -------------------------------------------- |
+| `bun run dev`            | Dev server with hot reload                   |
+| `bun run start`          | Production server                            |
+| `bun run mcp`            | MCP server over stdio                        |
+| `bun run mcp:dev`        | MCP server over stdio with hot reload        |
+| `bun run mcp:inspect`    | MCP Inspector against the stdio server       |
+| `bun run openapi:export` | Regenerate the static `openapi.json`         |
+| `bun run typecheck`      | Type-check with `tsc --noEmit`               |
+| `bun test`               | Run the test suite (no network access)       |
 
-The upstream wraps payloads as `{status,data}` and returns opaque base64url ids (with `=`
-padding, sent raw in the path) — both handled in `lib/upstream.ts` / `lib/encoding.ts`.
+A change is done when `bun run typecheck` is clean and `bun test` is green.
 
-Without `UPSTREAM_BASE_URL`, `/api/*` returns a clean `503` envelope (no data).
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md): design, request flow, and source layout.
+- [CLAUDE.md](./CLAUDE.md): detailed coding conventions.
+- [CHANGELOG.md](./CHANGELOG.md): release history.
 
-### Auto-solver (optional, hands-off clearance)
+## Contributing
 
-`cf_clearance` expires, so instead of refreshing it by hand you can let the app do it —
-server-deployable via **FlareSolverr** (a headless-browser challenge solver that runs in its
-own container). Set `SOLVER_ENABLED=true` + `SOLVER_URL` (the FlareSolverr `/v1` endpoint).
-On a `403`, the proxy calls FlareSolverr to clear the challenge, saves the fresh
-`cf_clearance` + User-Agent (to `CONFIG_STORE_PATH`), and retries the request once. Left off,
-refresh manually via the `/#/config` page.
-
-Run both with the provided `docker-compose.yml`:
-
-```sh
-docker compose up -d   # starts the API + a flaresolverr sidecar
-```
-
-The browser lives inside FlareSolverr, so this works on a headless server (no display).
-
-## Architecture
-
-- **Bun + Hono** (`OpenAPIHono`), exported as `export default { fetch, port }` — no
-  `Bun.serve`, Vite, or Express.
-- **Single egress**: every upstream call goes through `lib/upstream.ts` (auth headers,
-  timeout, `{status,data}` unwrap, error mapping, `403` auto-refresh), with an optional Redis
-  cache (`lib/cache.ts`). Routes never `fetch` directly.
-- **Zod-first**: one schema drives both request validation and OpenAPI generation; strict
-  TypeScript, no `any` (upstream payloads are opaque `z.unknown()`).
-- **Two frontends, one core**: the REST `/api/*` routes and the in-process MCP server (`/mcp`)
-  both call `lib/` directly — identical egress, cache, and credit envelope, no second hop.
-- **Native React SPA**: bundled by a single `Bun.build` (+ Tailwind v4 CSS-first), served by
-  Hono; `components/` + `hooks/` + `lib/` layout, one shared sticky `Header`.
-- **Definition of done**: `bun run typecheck` (clean) + `bun test` (green), no network in tests.
-
-Full conventions live in [CLAUDE.md](./CLAUDE.md).
-
-## Scripts
-
-| Script                  | Purpose                                       |
-| ----------------------- | --------------------------------------------- |
-| `bun run dev`         | Hot-reloading dev server                      |
-| `bun run start`       | Run server                                    |
-| `bun run mcp`         | Run the MCP server over stdio                 |
-| `bun run mcp:dev`     | MCP server (stdio) with hot reload            |
-| `bun run mcp:inspect` | Launch MCP Inspector against the stdio server |
-| `bun test`            | Run tests                                     |
-| `bun run typecheck`   | `tsc --noEmit`                              |
-
-## Project conventions
-
-See [CLAUDE.md](./CLAUDE.md).
+Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) and the
+[Code of Conduct](./CODE_OF_CONDUCT.md) first. Report security problems privately, as
+described in [SECURITY.md](./SECURITY.md).
 
 ## License
 
-[AGPL-3.0-or-later](./LICENSE) — free to use, study, modify, and share; network deployments must offer their source.
+Copyright © 2026 [Andika Dwi Saputra](https://andikadevs.space).
+
+Licensed under the [GNU Affero General Public License v3.0 or later](./LICENSE). You may use,
+study, modify, and share this software. If you run a modified version as a network service,
+you must offer its complete source code to the service's users under the same license.
 
 ## Disclaimer
 
-**For educational and learning purposes only.** This is a personal, non-commercial study
-project.
+This is a personal, non-commercial project for education and learning.
 
 - **Not affiliated** with or endorsed by PDDikti, Kemdiktisaintek, or Cloudflare. All upstream
-  data is © PDDikti; names belong to their respective owners.
-- **Provided "as is"**, with no warranty of accuracy, availability, or fitness (see the AGPL-3.0
-  terms).
-- **No liability for misuse.** The authors accept no responsibility for how this software is
-  used or for any damages arising from it — you use it entirely at your own risk.
-- **Your responsibility.** You must comply with all applicable laws and the terms of service of
-  any system it touches (including the upstream's terms and its anti-bot/rate-limit
-  protections). Do not use it to overload, disrupt, mass-scrape, or abuse any service, or to
-  handle personal data unlawfully.
-
-See [LICENSE](./LICENSE) for the full text.
+  data is © PDDikti. Other names belong to their owners.
+- **No warranty.** The software is provided "as is", with no guarantee of accuracy,
+  availability, or fitness for any purpose. See the [license](./LICENSE).
+- **No liability for misuse.** The author is not responsible for how this software is used
+  or for any damage that results. You use it at your own risk.
+- **Your responsibility.** Follow all applicable laws and the terms of service of every
+  system you reach, including the upstream's terms and its anti-bot and rate-limit
+  protections. Do not use this software to overload, disrupt, or mass-scrape any service, or
+  to process personal data unlawfully.
