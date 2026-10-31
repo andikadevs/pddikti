@@ -155,8 +155,14 @@
     animation: 220ms ease-out both vt-fade-in;
   }
 
-  ::view-transition-group(site-header) {
+  /* Swap the header instantly: cross-fading two snapshots would double its shadow. */
+  ::view-transition-group(site-header),
+  ::view-transition-new(site-header) {
     animation: none;
+  }
+
+  ::view-transition-old(site-header) {
+    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
