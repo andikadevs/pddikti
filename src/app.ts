@@ -147,7 +147,7 @@ export function buildApp(): OpenAPIHono<AppEnv> {
   app.get('/mcp/tools', async (c) => c.json(await getToolCatalog()))
   // Stateless MCP (Streamable HTTP) for AI agents; self-gated by X-API-Key.
   app.route('/mcp', mcpHttp)
-  // JSON config API (password-gated); the UI is a React view at /#/config.
+  // JSON config API (password-gated); the UI is the SPA's /config view.
   app.route('/config', configApi)
   app.route('/', seo)
   if (loadConfig().DEBUG) app.route('/__dev', devReload)

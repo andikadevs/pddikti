@@ -12,7 +12,7 @@ import type { AppEnv } from '../types.ts'
 
 /**
  * JSON config API at `/config/*`, gated by CONFIG_PASSWORD. The UI is a React view at
- * `/#/config`; these endpoints are its backend. Lets an operator (manually — the
+ * `/config`; these endpoints are its backend. Lets an operator (manually — the
  * FlareSolverr auto-solver is the primary path) set upstream `cf_clearance` + User-Agent,
  * base URL, and timeout, persisted to CONFIG_STORE_PATH and overriding env at runtime.
  * Every route returns JSON; disabled (404) when CONFIG_PASSWORD is empty.

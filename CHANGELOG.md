@@ -7,6 +7,18 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Redesigned web UI built with shadcn/ui on Base UI: a search-first home page, a tabbed
+  university profile with filterable, paged tables, light and dark themes, and smooth
+  View Transitions between pages.
+- `bun run dev` reloads the browser automatically when client files change.
+
+### Changed
+
+- Web pages use clean paths (`/pt/<id>`, `/mcp/docs`, `/config`) instead of hash URLs.
+  Old hash links redirect to the new paths.
+
 ## [1.1.0] - 2026-10-31
 
 ### Changed

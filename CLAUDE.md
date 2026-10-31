@@ -47,9 +47,9 @@ src/
   routes/           one file per group; each exports an OpenAPIHono sub-app
   web/seo.ts        robots.txt + sitemap.xml
   web/client-bundle.ts  single Bun.build (JS + Tailwind CSS via bun-plugin-tailwind), cached
-  web/client/       React SPA — index.html, index.tsx (createRoot+StrictMode), App.tsx,
-                    components/ (UI + views), hooks/ (use-endpoint, use-selected-pt,
-                    use-debounced-value), lib/ (constants, format, theme), styles.css
+  web/dev-reload.ts     DEBUG-only live reload (SSE on client file changes)
+  web/client/       React SPA — index.html, index.tsx (createRoot+StrictMode), app.tsx,
+                    lib/, hooks/, components/{ui,layout,common}/, features/<page>/, styles.css
 tests/              *.test.ts (bun:test)
 docs/ARCHITECTURE.md  design overview for humans (keep in sync with this file)
 ```
@@ -57,20 +57,40 @@ docs/ARCHITECTURE.md  design overview for humans (keep in sync with this file)
 ## Web client (root `/`)
 
 - Root serves a **React SPA** (a generic PT profile explorer: search → pick → profile,
-  selection carried in the URL hash `#/pt/<id>`), all native, no Vite:
+  views at `/`, `/pt/<id>`, `/mcp/docs`, `/config`, defined once in `web/nav.ts`), all native,
+  no Vite. The server serves the HTML shell on each SPA path;
   `GET /` returns the HTML shell, `GET /app.js` the **`Bun.build`** browser bundle, and
   `GET /app.css` the **Tailwind v4** stylesheet — both produced by a **single `Bun.build`**
   with **`bun-plugin-tailwind`** (the `index.tsx` entry imports `styles.css`; no separate
   Tailwind CLI process), in `web/client-bundle.ts`. Both are cached and rebuilt per request
   when `DEBUG`. Do not add `Bun.serve`, Vite, or a `dist/` build step.
-- Organize the client: **`components/`** (UI primitives in `ui.tsx`, plus view components),
-  **`hooks/`** (React hooks — `use-endpoint`, `use-selected-pt`, `use-debounced-value`;
-  kebab-case, one hook concern per file), **`lib/`** (pure non-React utils — `constants`,
-  `format` the shared `text`/`year`/`num` helpers, `theme`). Don't re-inline shared helpers
-  into components.
-- Styling is **Tailwind v4, CSS-first** (`styles.css`: `@import "tailwindcss"`, palette in
-  `@theme`, `@source "./**/*.tsx"`). The design is **flat** — radius tokens are `0` and no
-  `rounded-*` utilities are used. Keep it that way.
+- `bun run dev` sets `DEBUG`: the bundle rebuilds per request and `web/dev-reload.ts`
+  (mounted at `/__dev` only under `DEBUG`) pushes a Server-Sent Event when a client file
+  changes, so the browser reloads itself.
+- UI is **shadcn/ui on Base UI primitives** (`components.json`, style `base-nova`). Add
+  components with `bunx shadcn@latest add <name>`; they land in `components/ui/` and are
+  owned by the repo. Import client modules through the `@/*` alias (`@/components/ui/button`).
+- Organize the client by responsibility, one concern per file, kebab-case names:
+  - **`lib/`** pure, React-free helpers: `navigation` (path routes), `api-paths`,
+    `fetch-json` (deduplicating GET cache), `format`, `accreditation`, `view-transition`,
+    `types`, `utils` (`cn`).
+  - **`hooks/`** state only: `use-endpoint`, `use-route`, `use-search-query`,
+    `use-row-filter`, `use-visible-rows`, `use-theme`, `use-debounced-value`.
+  - **`components/ui/`** shadcn primitives; **`components/layout/`** site frame;
+    **`components/common/`** shared building blocks (`async-content`, `section-card`,
+    `stat-card`, `detail-list`, `search-input`, `table-toolbar`, `empty-state`, …).
+  - **`features/<page>/`** one folder per view (`home`, `pt-profile`, `mcp-docs`,
+    `config`). A feature composes common components and owns its own data fetching;
+    keep page-specific helpers inside the feature.
+  Don't re-inline shared helpers into components, and don't call `fetch` from a component:
+  go through `useEndpoint` / `fetchJson` (or a feature's API module, like `config-api`).
+- Styling is **Tailwind v4, CSS-first** with shadcn tokens in `styles.css` (`:root` and
+  `.dark` variables, mapped in `@theme inline`). Use semantic utilities (`bg-card`,
+  `text-muted-foreground`), never raw hex colors. The look is **soft and floating**: rounded
+  corners (`--radius`), `shadow-soft` / `shadow-float` instead of borders, filled inputs.
+  Don't add `border` utilities for separation; use spacing, tinted backgrounds, or shadows.
+- Navigate with `AppLink` (History API, no hash URLs); route and tab changes animate
+  through `withViewTransition`. Scrollbars are thin globally.
 - `web/client/` is **React JSX** (`jsx: react-jsx`, `jsxImportSource: react` in tsconfig).
   Server code uses no JSX. The client only talks to this API's own `/api/*` routes — never
   the upstream directly — and reads upstream fields defensively (shapes are not guaranteed).
@@ -105,7 +125,7 @@ mapping, and `withCredit` envelope as the REST routes. No second HTTP hop.
   can't send a static header — can reach it; only the `/api/*` REST surface stays key-gated.
 - `mcp/catalog.ts` — `getToolCatalog()`: lists the tools over an in-memory transport (no
   network), cached. Served as JSON at **`GET /mcp/tools`** (the MCP analogue of
-  `/api/openapi.json`) and rendered by the SPA's **MCP Docs** view (`/#/mcp`). Never hand-list
+  `/api/openapi.json`) and rendered by the SPA's **MCP Docs** view (`/mcp/docs`). Never hand-list
   tools for docs — this is derived from the live server.
 
 Cross-prodi aggregations with no single upstream (e.g. all university lecturers) live in

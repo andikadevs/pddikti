@@ -85,7 +85,7 @@ See [`.env.example`](./.env.example) for every variable.
 | `UPSTREAM_TIMEOUT_MS`           | `15000`                 | Timeout per upstream request.                                 |
 | `API_KEY`                       | empty (off)             | Protects `/api/*` with `X-API-Key`. Empty means public.       |
 | `SESSION_TTL_S`                 | `86400`                 | Lifetime of the SPA session and config cookies.               |
-| `CONFIG_PASSWORD`               | empty (off)             | Enables the `/#/config` page. Empty disables it (404).        |
+| `CONFIG_PASSWORD`               | empty (off)             | Enables the `/config` page. Empty disables it.                |
 | `CONFIG_STORE_PATH`             | `./runtime-config.json` | File for runtime overrides and the solved cookie.             |
 | `SOLVER_ENABLED`                | `false`                 | Solve Cloudflare challenges with FlareSolverr on a `403`.     |
 | `SOLVER_URL`                    | none                    | FlareSolverr `/v1` endpoint.                                  |
@@ -120,9 +120,10 @@ Every JSON response includes a `credit` field. Upstream errors keep their HTTP s
 
 ### Web explorer
 
-`GET /` serves a React app. Search a university to see its profile, statistics, costs,
-study duration, study programs, all lecturers, a student search, facilities, and name
-history. The selected university is kept in the URL hash (`#/pt/<id>`).
+`GET /` serves a React app built with shadcn/ui on Base UI. Search a university to open
+its profile at `/pt/<id>`: headline statistics, then tabs for the overview (identity,
+costs, study duration, name history), study programs, all lecturers, and a student
+search. Light and dark themes are supported.
 
 ### MCP server
 
@@ -135,7 +136,7 @@ credit envelope as the REST API.
 | stdio           | `bun run mcp`                 | Local clients  |
 | Streamable HTTP | `POST /mcp` on the server     | Remote clients |
 
-The tool catalog is at `GET /mcp/tools` (JSON) and `/#/mcp` (readable view).
+The tool catalog is at `GET /mcp/tools` (JSON) and `/mcp/docs` (readable view).
 
 > [!NOTE]
 > `/mcp` is always public, even when `API_KEY` is set. Browser connectors cannot send a
@@ -204,7 +205,7 @@ You supply the cookie at runtime, not in `.env`:
   FlareSolverr to solve the challenge, saves the new cookie to `CONFIG_STORE_PATH`, and
   retries once. FlareSolverr runs its own headless browser, so this works on a server with
   no display.
-- **Manual.** Set `CONFIG_PASSWORD` and open `/#/config`. Paste the cookie and User-Agent,
+- **Manual.** Set `CONFIG_PASSWORD` and open `/config`. Paste the cookie and User-Agent,
   or a full "Copy as cURL" from your browser's DevTools. Changes apply without a restart
   and persist across restarts.
 
@@ -212,7 +213,7 @@ You supply the cookie at runtime, not in `.env`:
 
 | Command                  | Purpose                                      |
 | ------------------------ | -------------------------------------------- |
-| `bun run dev`            | Dev server with hot reload                   |
+| `bun run dev`            | Dev server; reloads the server and browser on changes |
 | `bun run start`          | Production server                            |
 | `bun run mcp`            | MCP server over stdio                        |
 | `bun run mcp:dev`        | MCP server over stdio with hot reload        |

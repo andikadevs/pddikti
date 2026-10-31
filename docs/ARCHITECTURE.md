@@ -64,7 +64,7 @@ scripts/          maintenance scripts such as the OpenAPI export
 The upstream sits behind Cloudflare bot management. A request needs a `cf_clearance`
 cookie and the exact `User-Agent` it was issued to. The service gets them in two ways:
 
-1. **Config page.** An operator pastes the cookie and User-Agent at `/#/config`. The values
+1. **Config page.** An operator pastes the cookie and User-Agent at `/config`. The values
    are saved to `CONFIG_STORE_PATH` and applied without a restart.
 2. **Auto-solver.** With `SOLVER_ENABLED=true`, a `403` triggers a call to a FlareSolverr
    sidecar. The service stores the fresh clearance and retries the request once.
@@ -77,8 +77,12 @@ degrade to a cache miss, so the cache changes latency, never correctness.
 
 ## Web client
 
-The SPA is React, bundled by a single `Bun.build` call with `bun-plugin-tailwind`. Hono
-serves the HTML shell, the JS bundle, and the CSS. There is no Vite and no `dist/` step.
+The SPA is React with shadcn/ui on Base UI primitives, bundled by a single `Bun.build`
+call with `bun-plugin-tailwind`. Hono serves the HTML shell on every SPA path (`/`,
+`/pt/<id>`, `/mcp/docs`, `/config`), plus the JS bundle and the CSS. There is no Vite and
+no `dist/` step. Client code is split into `lib/` (pure helpers), `hooks/` (state),
+`components/` (shared UI), and `features/` (one folder per page). Under `DEBUG`, a
+development-only `/__dev` endpoint pushes a reload event when client files change.
 The client talks only to this service's `/api/*` routes.
 
 ## MCP server
@@ -90,4 +94,4 @@ The client talks only to this service's `/api/*` routes.
 - **Streamable HTTP** (`POST /mcp`) for remote clients. It is always public, because browser
   connectors cannot send a static API key.
 
-`GET /mcp/tools` returns the tool catalog as JSON, and the SPA renders it at `/#/mcp`.
+`GET /mcp/tools` returns the tool catalog as JSON, and the SPA renders it at `/mcp/docs`.
