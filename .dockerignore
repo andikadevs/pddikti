@@ -6,3 +6,8 @@ node_modules
 tests
 .claude
 .agents
+skills-lock.json
+.github
+docs
+*.md
+.editorconfig
