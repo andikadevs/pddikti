@@ -90,8 +90,26 @@ function toToolResult(data: unknown): CallToolResult {
   }
 }
 
-const idArg = (entity: string) => z.string().min(1).describe(`${entity} identifier.`)
-const semesterArg = z.string().min(1).describe('Semester code, e.g. "20241".')
+/** Shared hints: every tool is a read-only lookup against an external, live data source. */
+const READ_ONLY = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: true,
+} as const
+
+const idArg = (entity: string, from: string) =>
+  z
+    .string()
+    .min(1)
+    .describe(
+      `Opaque ${entity} id, copied exactly from a search_pddikti result ` +
+        `(entity "${from}"). Do not guess or construct it.`,
+    )
+const semesterArg = z
+  .string()
+  .regex(/^\d{4}[12]$/, 'Semester must be YYYYS with S = 1 or 2, e.g. "20241".')
+  .describe('Semester code YYYYS: year plus 1 (odd/ganjil) or 2 (even/genap), e.g. "20241".')
 
 /** Register every PDDikti tool on the given MCP server. */
 export function registerTools(server: McpServer): void {
@@ -100,9 +118,18 @@ export function registerTools(server: McpServer): void {
     {
       title: 'Search PDDikti',
       description:
-        'Full-text search of Indonesian higher-education entities (universities, study ' +
-        `programs, lecturers, students) by keyword. ${search.description}`,
-      inputSchema: { entity: search.enum, keyword: z.string().min(1).describe('Search keyword.') },
+        'Search Indonesian higher-education records by keyword and return matching entries ' +
+        'with their opaque ids. Start here: every other tool needs an id from this search. ' +
+        'Returns a JSON list (empty when nothing matches). ' +
+        search.description,
+      inputSchema: {
+        entity: search.enum,
+        keyword: z
+          .string()
+          .min(1)
+          .describe('Name, NIM (student number), NIDN (lecturer number), or code to search for.'),
+      },
+      annotations: { title: 'Search PDDikti', ...READ_ONLY },
     },
     async ({ entity, keyword }) => {
       const upstream = search.lookup.get(entity)!.upstream
@@ -114,8 +141,13 @@ export function registerTools(server: McpServer): void {
     'get_university',
     {
       title: 'Get university info',
-      description: `Fetch one aspect of a university (PT) by its id. ${university.description}`,
-      inputSchema: { id_pt: idArg('University (PT)'), aspect: university.enum },
+      description:
+        'Fetch one aspect of a single university (perguruan tinggi, PT) as JSON, or its logo ' +
+        'as an image. Use for profile, accreditation, and history questions about one ' +
+        'university; for its study programs or lecturers use get_university_study_programs ' +
+        `or get_university_lecturers. ${university.description}`,
+      inputSchema: { id_pt: idArg('university (PT)', 'pt'), aspect: university.enum },
+      annotations: { title: 'Get university info', ...READ_ONLY },
     },
     async ({ id_pt, aspect }) => {
       if (aspect === 'logo') {
@@ -130,8 +162,12 @@ export function registerTools(server: McpServer): void {
     'get_university_study_programs',
     {
       title: 'Get university study programs',
-      description: 'List a university’s study programs (prodi) for a given semester.',
-      inputSchema: { id_pt: idArg('University (PT)'), semester: semesterArg },
+      description:
+        'List every study program (prodi) a university offered in one semester, with each ' +
+        'program’s id. Pass a returned prodi id to ' +
+        'get_study_program for details. Returns a JSON list.',
+      inputSchema: { id_pt: idArg('university (PT)', 'pt'), semester: semesterArg },
+      annotations: { title: 'Get university study programs', ...READ_ONLY },
     },
     async ({ id_pt, semester }) =>
       toToolResult(await getUpstream().getWithIdAndSemester('pt/prodi', id_pt, semester)),
@@ -142,9 +178,12 @@ export function registerTools(server: McpServer): void {
     {
       title: 'Get university lecturers',
       description:
-        'List all lecturers of a university for a semester, aggregated across its active ' +
-        'study programs and deduplicated.',
-      inputSchema: { id_pt: idArg('University (PT)'), semester: semesterArg },
+        'List all lecturers of one university for a semester, merged across its active ' +
+        'study programs and deduplicated. Slower than other tools because it fans out one ' +
+        'request per program; prefer get_study_program_lecturers when one program is ' +
+        'enough. Returns a JSON list.',
+      inputSchema: { id_pt: idArg('university (PT)', 'pt'), semester: semesterArg },
+      annotations: { title: 'Get university lecturers', ...READ_ONLY },
     },
     async ({ id_pt, semester }) =>
       toToolResult(await aggregateUniversityLecturers(id_pt, semester)),
@@ -154,8 +193,12 @@ export function registerTools(server: McpServer): void {
     'get_study_program',
     {
       title: 'Get study program info',
-      description: `Fetch one aspect of a study program (prodi) by its id. ${studyProgram.description}`,
-      inputSchema: { id_prodi: idArg('Study program (Prodi)'), aspect: studyProgram.enum },
+      description:
+        'Fetch one aspect of a single study program (program studi, prodi) as JSON. ' +
+        'For its lecturer roster use get_study_program_lecturers. ' +
+        studyProgram.description,
+      inputSchema: { id_prodi: idArg('study program (prodi)', 'prodi'), aspect: studyProgram.enum },
+      annotations: { title: 'Get study program info', ...READ_ONLY },
     },
     async ({ id_prodi, aspect }) => {
       const upstream = studyProgram.lookup.get(aspect)!.upstream
@@ -167,12 +210,15 @@ export function registerTools(server: McpServer): void {
     'get_study_program_lecturers',
     {
       title: 'Get study program lecturers',
-      description: `List a study program’s lecturers for a semester. ${studyProgramLecturers.description}`,
+      description:
+        'List the lecturers attached to one study program in a semester. Pass a returned ' +
+        `lecturer id to get_lecturer for their profile. Returns a JSON list. ${studyProgramLecturers.description}`,
       inputSchema: {
-        id_prodi: idArg('Study program (Prodi)'),
+        id_prodi: idArg('study program (prodi)', 'prodi'),
         semester: semesterArg,
         kind: studyProgramLecturers.enum,
       },
+      annotations: { title: 'Get study program lecturers', ...READ_ONLY },
     },
     async ({ id_prodi, semester, kind }) => {
       const upstream = studyProgramLecturers.lookup.get(kind)!.upstream
@@ -186,8 +232,11 @@ export function registerTools(server: McpServer): void {
     'get_lecturer',
     {
       title: 'Get lecturer info',
-      description: `Fetch one aspect of a lecturer (dosen) by its id. ${lecturer.description}`,
-      inputSchema: { id_dosen: idArg('Lecturer (Dosen)'), aspect: lecturer.enum },
+      description:
+        'Fetch one aspect of a single lecturer (dosen) as JSON: profile, teaching, ' +
+        `research, or other records. ${lecturer.description}`,
+      inputSchema: { id_dosen: idArg('lecturer (dosen)', 'dosen'), aspect: lecturer.enum },
+      annotations: { title: 'Get lecturer info', ...READ_ONLY },
     },
     async ({ id_dosen, aspect }) => {
       const upstream = lecturer.lookup.get(aspect)!.upstream
@@ -199,8 +248,12 @@ export function registerTools(server: McpServer): void {
     'get_student',
     {
       title: 'Get student detail',
-      description: 'Fetch a student (mahasiswa) detail record by its id.',
-      inputSchema: { id_mhs: idArg('Student (Mahasiswa)') },
+      description:
+        'Fetch the public PDDikti record of one student (mahasiswa), such as university, ' +
+        'study program, and enrollment status. There is no student list; find the ' +
+        'id with search_pddikti (entity "mhs") by name or NIM. Returns JSON.',
+      inputSchema: { id_mhs: idArg('student (mahasiswa)', 'mhs') },
+      annotations: { title: 'Get student detail', ...READ_ONLY },
     },
     async ({ id_mhs }) => toToolResult(await getUpstream().getWithKeyword('detail/mhs', id_mhs)),
   )
@@ -209,8 +262,12 @@ export function registerTools(server: McpServer): void {
     'get_statistics',
     {
       title: 'Get aggregate statistics',
-      description: `National PDDikti aggregate statistics. ${statistics.description}`,
+      description:
+        'Fetch one national aggregate statistic for Indonesian higher education as JSON. ' +
+        'Needs no id; use it for country-wide counts, not for a single institution. ' +
+        statistics.description,
       inputSchema: { metric: statistics.enum },
+      annotations: { title: 'Get aggregate statistics', ...READ_ONLY },
     },
     async ({ metric }) => {
       const upstream = statistics.lookup.get(metric)!.upstream
@@ -222,8 +279,12 @@ export function registerTools(server: McpServer): void {
     'list_study_programs_by_field',
     {
       title: 'List study programs by field',
-      description: `List study programs grouped by field of study. ${field.description}`,
+      description:
+        'List study programs nationwide for one field of study (bidang ilmu), for ' +
+        'discovering which programs exist in a discipline. Needs no id. Returns a JSON list. ' +
+        field.description,
       inputSchema: { field: field.enum },
+      annotations: { title: 'List study programs by field', ...READ_ONLY },
     },
     async (args) => {
       const upstream = field.lookup.get(args.field)!.upstream

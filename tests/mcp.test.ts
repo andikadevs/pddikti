@@ -64,6 +64,28 @@ describe('mcp tools', () => {
     )
   })
 
+  test('declares every tool read-only and sends server instructions', async () => {
+    applyEnv()
+    setUpstream(new UpstreamClient({ baseUrl: 'https://upstream.test', headers: {}, timeoutMs: 1000, fetchImpl: jsonFetch({}) }))
+    const client = await connectClient()
+    expect(client.getInstructions()).toContain('search_pddikti')
+    const { tools } = await client.listTools()
+    for (const tool of tools) {
+      expect(tool.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false })
+    }
+  })
+
+  test('rejects a malformed semester code', async () => {
+    applyEnv()
+    setUpstream(new UpstreamClient({ baseUrl: 'https://upstream.test', headers: {}, timeoutMs: 1000, fetchImpl: jsonFetch({}) }))
+    const client = await connectClient()
+    const result = await client.callTool({
+      name: 'get_university_study_programs',
+      arguments: { id_pt: 'x', semester: '2024' },
+    })
+    expect(result.isError).toBe(true)
+  })
+
   test('GET /mcp/tools exposes the tool catalog as JSON', async () => {
     const app = appWithUpstream(jsonFetch({}))
     const res = await app.request('/mcp/tools')
