@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-01
+
 ### Added
 
 - Redesigned web UI built with shadcn/ui on Base UI: a search-first home page, a tabbed
@@ -113,7 +115,8 @@ covered by Semantic Versioning.
 - React university explorer.
 - Optional API key and Redis cache.
 
-[Unreleased]: https://github.com/andikadevs/pddikti/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/andikadevs/pddikti/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/andikadevs/pddikti/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/andikadevs/pddikti/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/andikadevs/pddikti/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/andikadevs/pddikti/compare/v0.6.0...v0.7.0
