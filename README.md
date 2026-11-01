@@ -5,6 +5,7 @@
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](./LICENSE)
 [![MCP server](https://img.shields.io/badge/MCP-server-black)](#mcp-server)
 [![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-green)](./openapi.json)
+[![pddikti MCP server](https://glama.ai/mcp/servers/andikadevs/pddikti/badges/score.svg)](https://glama.ai/mcp/servers/andikadevs/pddikti)
 
 Open-source **PDDikti API** and **PDDikti MCP server** for Indonesian higher-education data
 from [PDDikti](https://pddikti.kemdiktisaintek.go.id) (Pangkalan Data Pendidikan Tinggi):
@@ -44,6 +45,7 @@ FlareSolverr.
 - [Development](#development)
 - [Ringkasan dalam Bahasa Indonesia](#ringkasan-dalam-bahasa-indonesia)
 - [FAQ](#faq)
+- [Author](#author)
 - [Contributing](#contributing)
 - [License](#license)
 - [Disclaimer](#disclaimer)
@@ -301,6 +303,11 @@ No. Deploy your own instance with Docker Compose or Bun. See [Quick start](#quic
 
 Panggil endpoint pencarian, misalnya `GET /api/search/mhs/<nama-atau-nim>/` untuk mahasiswa
 atau `GET /api/search/dosen/<nama>/` untuk dosen. Daftar lengkap ada di `/api/docs`.
+
+## Author
+
+Built and maintained by [Andika Dwi Saputra](https://andikadevs.space). See more projects and get in touch
+at [andikadevs.space](https://andikadevs.space).
 
 ## Contributing
 

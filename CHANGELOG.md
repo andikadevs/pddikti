@@ -13,6 +13,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   university profile with filterable, paged tables, light and dark themes, and smooth
   View Transitions between pages.
 - `bun run dev` reloads the browser automatically when client files change.
+- MCP tools declare read-only annotations, explain when to use each tool, and validate
+  semester codes; the server sends usage instructions on `initialize`.
+- `glama.json` claims the server on the Glama MCP directory.
 
 ### Changed
 
