@@ -5,7 +5,7 @@
 [![License: AGPL-3.0-or-later](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue)](./LICENSE)
 [![MCP server](https://img.shields.io/badge/MCP-server-black)](#mcp-server)
 [![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-green)](./openapi.json)
-[![pddikti MCP server](https://glama.ai/mcp/servers/andikadevs/pddikti/badges/score.svg)](https://glama.ai/mcp/servers/andikadevs/pddikti)
+[![pddikti MCP server – quality and maintenance score on Glama](https://glama.ai/mcp/servers/andikadevs/pddikti/badges/score.svg)](https://glama.ai/mcp/servers/andikadevs/pddikti)
 
 Open-source **PDDikti API** and **PDDikti MCP server** for Indonesian higher-education data
 from [PDDikti](https://pddikti.kemdiktisaintek.go.id) (Pangkalan Data Pendidikan Tinggi):
@@ -159,6 +159,8 @@ The tool catalog is at `GET /mcp/tools` (JSON) and `/mcp/docs` (readable view).
 > static header, so only the `/api/*` REST surface is key-protected.
 
 ## MCP clients
+
+[![pddikti MCP server – quality and maintenance score on Glama](https://glama.ai/mcp/servers/andikadevs/pddikti/badges/card.svg)](https://glama.ai/mcp/servers/andikadevs/pddikti)
 
 ### Claude Code
 
